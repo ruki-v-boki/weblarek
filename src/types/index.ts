@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
-
-=======
 
 // -------------INTERFACE----------------------------------
->>>>>>> master
 export interface IApi {
     get<T extends object>(uri: string): Promise<T>;
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
-<<<<<<< HEAD
-=======
 
 export interface IApiResponse<T> {
     total: number;
@@ -61,4 +54,3 @@ export type TOrderResponse = {
 export type IProductsResponse = IApiResponse<IProduct>
 export type IOrdersResponse = IApiResponse<TOrder>
 
->>>>>>> master

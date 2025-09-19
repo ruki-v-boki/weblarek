@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 
 import { IApi, IProduct, IApiResponse, TOrder, TOrderResponse } from "../../types";
->>>>>>> master
 type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 export class Api {
@@ -40,8 +37,6 @@ export class Api {
         }).then(this.handleResponse<T>);
     }
 }
-<<<<<<< HEAD
-=======
 
 //-------------------------------------------------------
 
@@ -59,4 +54,3 @@ export class ApiClient {
         return this.api.post<TOrderResponse>('/order/', orderData)
     }
 }
->>>>>>> master
