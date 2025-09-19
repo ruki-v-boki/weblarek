@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+<<<<<<< HEAD
+=======
+    "start": "vite serve",
+>>>>>>> master
     "build": "tsc && vite build",
     "preview": "vite preview"
   },

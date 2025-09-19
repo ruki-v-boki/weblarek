@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+import { IApi, IProduct, IApiResponse, TOrder, TOrderResponse } from "../../types";
+>>>>>>> master
 type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
 export class Api {
@@ -35,3 +40,23 @@ export class Api {
         }).then(this.handleResponse<T>);
     }
 }
+<<<<<<< HEAD
+=======
+
+//-------------------------------------------------------
+
+export class ApiClient {
+    constructor(
+        protected api: IApi
+    ){}
+
+    getAllProducts(): Promise<IProduct[]> {
+        return this.api.get<IApiResponse<IProduct>>('/product/')
+            .then(response => response.items)
+    }
+
+    placeOrder(orderData: TOrder): Promise<TOrderResponse> {
+        return this.api.post<TOrderResponse>('/order/', orderData)
+    }
+}
+>>>>>>> master
