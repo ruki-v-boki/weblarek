@@ -1,6 +1,4 @@
 import './scss/styles.scss';
-<<<<<<< HEAD
-=======
 import { Api, ApiClient } from './components/base/Api'
 import { Products } from './components/Models/Products'
 import { Basket } from './components/Models/Basket'
@@ -77,4 +75,3 @@ apiClient.getAllProducts().then(data => {
 
 
 
->>>>>>> master
