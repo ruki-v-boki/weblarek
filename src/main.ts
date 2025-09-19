@@ -4,10 +4,10 @@ import { Products } from './components/Models/Products'
 import { Basket } from './components/Models/Basket'
 import { Buyer } from './components/Models/Buyer'
 import { TPayment } from './types';
+import { API_URL } from './utils/constants';
 
 //Инициализация api
-const baseUrl = 'https://larek-api.nomoreparties.co/api/weblarek'
-const baseApi = new Api(baseUrl)
+const baseApi = new Api(API_URL)
 const apiClient = new ApiClient(baseApi)
 
 //Инициализация моделей
