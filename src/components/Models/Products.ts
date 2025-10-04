@@ -1,5 +1,6 @@
 import { IProduct } from "../../types"
 
+
 export class Products {
   private allProducts: IProduct[] = []
   protected selectedProduct: IProduct | null = null
@@ -27,8 +28,10 @@ export class Products {
     return this.allProducts.find(product => product.id === id)
   }
 
-  getSelectedProduct(): IProduct | null {
-    return this.selectedProduct
+  getSelectedProduct(): IProduct {
+    if (!this.selectedProduct) {
+      throw new Error('Ничего не выбрано')
+    }
+    return this.selectedProduct as IProduct
   }
-
 }

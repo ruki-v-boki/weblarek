@@ -20,3 +20,24 @@ export const settings = {
 
 };
 
+export const classMap = {
+  headerBasket: '.header__basket',
+  headerBasketCounter: '.header__basket-counter',
+  modalClose: '.modal__close',
+  modalContent: '.modal__content',
+  modalActive: '.modal_active',
+  SuccesstotalPrice: '.order-success__description',
+  SuccessConfirmButton: '.order-success__close',
+  basketList: '.basket__list',
+  basketButton: '.basket__button',
+  basketPrice: '.basket__price',
+  basketItemIndex: '.basket__item-index',
+  basketDeleteButton: '.basket__item-delete',
+  paymentActiveButton: 'button_alt-active',
+  cardTitle: '.card__title',
+  cardPrice: '.card__price',
+  cardImage: '.card__image',
+  cardCategory: '.card__category',
+  cardDescription: '.card__text',
+  cardButton: '.card__button',
+}
