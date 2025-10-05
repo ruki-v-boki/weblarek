@@ -77,4 +77,3 @@ import './scss/styles.scss';
 //   console.groupEnd();
 // })
 // .catch(e => console.error(`ошибка получения товаров:`, e))
-

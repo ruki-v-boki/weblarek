@@ -1,14 +1,22 @@
+import { IEvents } from "../../base/Events";
 import { CardView } from "./CardView";
+import { eventsMap } from "../../../utils/constants";
+import { ensureElement } from "../../../utils/utils";
 
 
 export class CardForPreview extends CardView {
   private _description: HTMLElement;
   private _orderButton: HTMLButtonElement;
 
-  constructor(container: HTMLElement){
-    super(container)
-    this._description = container.querySelector('.card__text') as HTMLElement;
-    this._orderButton = container.querySelector('.card__button') as HTMLButtonElement;
+  constructor(container: HTMLElement, events: IEvents){
+    super(container, events)
+    this._description = ensureElement<HTMLElement>('.card__text', container);
+    this._orderButton = ensureElement<HTMLButtonElement>('.card__button', container);
+
+    // ------------LISTENERS------------
+    this._orderButton.addEventListener('click', () => {
+      this._events.emit(eventsMap.PRODUCT_ADD, { id: this._id })
+    })
   }
 
   set description(value: string){

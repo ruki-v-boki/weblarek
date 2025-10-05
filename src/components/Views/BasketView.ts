@@ -1,4 +1,7 @@
+import { IEvents } from "../base/Events";
+import { eventsMap } from "../../utils/constants";
 import { Component } from "../base/Component";
+import { ensureElement } from "../../utils/utils";
 import { IBasketViewData } from "../../types";
 
 
@@ -7,11 +10,16 @@ export class BasketView extends Component<IBasketViewData> {
   private _submitButton: HTMLButtonElement;
   private _totalPrice: HTMLElement;
 
-  constructor(container: HTMLElement){
+  constructor(container: HTMLElement, private _events: IEvents){
     super(container)
-    this._basketList = container.querySelector('.basket__list') as HTMLUListElement;
-    this._submitButton = container.querySelector('.basket__button') as HTMLButtonElement;
-    this._totalPrice = container.querySelector('.basket__price') as HTMLElement;
+    this._basketList = ensureElement<HTMLUListElement>('.basket__list', container);
+    this._submitButton = ensureElement<HTMLButtonElement>('.basket__button', container);
+    this._totalPrice = ensureElement<HTMLElement>('.basket__price', container);
+
+    // ------------LISTENERS------------
+    this._submitButton.addEventListener('click', () => {
+      this._events.emit(eventsMap.BASKET_SUBMIT)
+    })
   }
 
   set basketList(purchases: HTMLElement[]){

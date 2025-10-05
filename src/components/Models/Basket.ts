@@ -1,42 +1,58 @@
+import { IEvents } from "../base/Events"
 import { IProduct } from "../../types"
+import { eventsMap } from "../../utils/constants"
 
 
 export class Basket {
-  protected purchases: Set<IProduct> = new Set()
+  private _purchases: Set<IProduct>;
 
-  constructor(){
-    this.purchases = new Set()
+  constructor(private _events: IEvents){
+    this._purchases = new Set()
   }
 
-// -------------GET-------------------------------------
+// ------------GET------------
   getPurchases(): IProduct[] {
-    return Array.from(this.purchases)
+    return Array.from(this._purchases)
   }
 
   getTotalPrice(): number {
-    let totalPrice = 0
-
-    this.purchases.forEach(product => {
-      totalPrice += product.price || 0
-    })
-    return totalPrice
+    return Array.from(this._purchases)
+    .reduce((totalPrice, product) => {
+        return totalPrice + (product.price || 0)
+    }, 0)
   }
 
   getQuantity(): number {
-    return this.purchases.size
-  }
-// -----------------------------------------------------
-
-  addToBasket(product: IProduct) {
-    this.purchases.add(product)
+    return this._purchases.size
   }
 
-  removeFromBasket(product: IProduct) {
-    this.purchases.delete(product)
-  }
-
-  isInBasketById(id: string): boolean {
-    return Array.from(this.purchases)
+// ---------------------------
+  isInBasket(id: string): boolean {
+    return Array.from(this._purchases)
     .some(product => product.id === id)
+  }
+
+  add(product: IProduct): void {
+    this._purchases.add(product)
+    this._events.emit(eventsMap.BASKET_CHANGE, {
+      addedProduct: product,
+      purсhases: this.getPurchases(),
+      totalPrice: this.getTotalPrice(),
+      quantity: this.getQuantity(),
+    })
+  }
+
+  remove(product: IProduct): void {
+    this._purchases.delete(product)
+    this._events.emit(eventsMap.BASKET_CHANGE, {
+      purсhases: this.getPurchases(),
+      totalPrice: this.getTotalPrice(),
+      quantity: this.getQuantity(),
+    })
+  }
+
+  clear(): void {
+    this._purchases.clear()
+    this._events.emit(eventsMap.BASKET_CLEAR)
   }
 }

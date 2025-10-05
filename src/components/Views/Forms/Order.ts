@@ -1,4 +1,7 @@
-import { FormView } from "./Form";
+import { IEvents } from "../../base/Events";
+import { FormView } from "./FormView";
+import { eventsMap } from "../../../utils/constants";
+import { ensureElement } from "../../../utils/utils";
 
 
 export class OrderForm extends FormView {
@@ -6,11 +9,25 @@ export class OrderForm extends FormView {
   private _cashPayButton: HTMLButtonElement;
   private _address: HTMLInputElement;
 
-  constructor(container: HTMLElement){
-    super(container)
-    this._onlinePayButton = container.querySelector('[name = "online"]') as HTMLButtonElement;
-    this._cashPayButton = container.querySelector('[name = "cash"]') as HTMLButtonElement;
-    this._address = container.querySelector('[name = "address"]') as HTMLInputElement;
+  constructor(container: HTMLElement, events: IEvents){
+    super(container, events)
+    this._onlinePayButton = ensureElement<HTMLButtonElement>('[name="online"]', container);
+    this._cashPayButton = ensureElement<HTMLButtonElement>('[name="cash"]', container);
+    this._address = ensureElement<HTMLInputElement>('[name="address"]', container);
+
+    // ------------LISTENERS------------
+    this._onlinePayButton.addEventListener('click', () => {
+      this._events.emit(eventsMap.PAYMENT_CHANGED, { payment: 'online' })
+    })
+    this._cashPayButton.addEventListener('click', () => {
+      this._events.emit(eventsMap.PAYMENT_CHANGED, { payment: 'cash' })
+    })
+    this._address.addEventListener('input', () => {
+      this._events.emit(eventsMap.ADDRESS_CHANGED, { address: this._address.value })
+    })
+    this._submitButton.addEventListener('click', () => {
+      this._events.emit(eventsMap.ORDER_SUBMIT)
+    })
   }
 
   togglePaymentButtonStatus(button: HTMLButtonElement, status: boolean): void {

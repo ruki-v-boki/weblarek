@@ -1,37 +1,43 @@
+import { IEvents } from "../base/Events";
 import { IProduct } from "../../types"
+import { eventsMap } from "../../utils/constants";
 
 
 export class Products {
-  private allProducts: IProduct[] = []
-  protected selectedProduct: IProduct | null = null
+  private _allProducts: IProduct[];
+  private _selectedProduct: IProduct | null;
 
-  constructor(){
-    this.allProducts = []
-    this.selectedProduct = null
+  constructor(private _events: IEvents){
+    this._allProducts = [];
+    this._selectedProduct = null;
   }
 
-// -------------SET-------------------------------------
+// ------------SET------------
   setProducts(products: IProduct[]) {
-    this.allProducts = products
+    this._allProducts = products
+    this._events.emit(eventsMap.PRODUCTS_RECEIVED,
+      { products: this._allProducts })
   }
 
   setSelectedProduct(product: IProduct) {
-    this.selectedProduct = product
+    this._selectedProduct = product
+    this._events.emit(eventsMap.PRODUCT_SELECT,
+      { selectedProduct: this._selectedProduct })
   }
 
-// -------------GET-------------------------------------
-  getProducts(): IProduct[] {
-    return this.allProducts
+// ------------GET------------
+  getAllProducts(): IProduct[] {
+    return this._allProducts
   }
 
   getProductById(id: string): IProduct | undefined {
-    return this.allProducts.find(product => product.id === id)
+    return this._allProducts.find(product => product.id === id)
   }
 
   getSelectedProduct(): IProduct {
-    if (!this.selectedProduct) {
+    if (!this._selectedProduct) {
       throw new Error('Ничего не выбрано')
     }
-    return this.selectedProduct as IProduct
+    return this._selectedProduct as IProduct
   }
 }
