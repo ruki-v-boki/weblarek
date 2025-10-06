@@ -1,79 +1,209 @@
 import './scss/styles.scss';
-// import { Api, ApiClient } from './components/base/Api'
-// import { API_URL } from './utils/constants';
-// import { Products } from './components/Models/Products'
-// import { Basket } from './components/Models/Basket'
-// import { Buyer } from './components/Models/Buyer'
-// import { IBuyer, TPayment } from './types';
-// import { apiProducts } from './utils/data';
+import { CardForCatalog } from './components/Views/Card/CardForCtalog';
+import { CardForBasket } from './components/Views/Card/CardForBasket';
+import { CardForPreview } from './components/Views/Card/CardPreview';
+// import { ContactsForm } from './components/Views/Forms/Contacts';
+import { cloneTemplate, ensureElement } from './utils/utils';
+// import { CardView } from './components/Views/Card/CardView';
+// import { OrderForm } from './components/Views/Forms/Order';
+import { BasketView } from './components/Views/BasketView';
+import { EventEmitter } from './components/base/Events';
+import { Products } from './components/Models/Products';
+import { Api, ApiClient } from './components/base/Api';
+// import { Success } from './components/Views/Success';
+import { GalleryView } from './components/Views/GalleryView';
+import { Basket } from './components/Models/Basket';
+import { HeaderView } from './components/Views/HeaderView';
+// import { Buyer } from './components/Models/Buyer';
+import { ModalView } from './components/Views/ModalView';
+import { eventsMap } from './utils/constants';
+import { API_URL } from './utils/constants';
+import { IBasketViewData } from './types';
+import { IProduct } from './types';
+import { OrderForm } from './components/Views/Forms/Order';
 
-// //Инициализация api
-// const baseApi = new Api(API_URL)
-// const apiClient = new ApiClient(baseApi)
 
-// //Инициализация моделей
-// const productsModel = new Products()
-// const basketModel = new Basket()
-// const buyerModel = new Buyer()
+// ------------ Templates ------------
+const basketTemplate = ensureElement<HTMLTemplateElement>("#basket")
+// Forms
+// const formOrderTemplate = ensureElement<HTMLTemplateElement>("#order")
+// const formContactsTemplate = ensureElement<HTMLTemplateElement>("#contacts")
+// const successTemplate = ensureElement<HTMLTemplateElement>("#success")
+// Cards
+const cardForCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog")
+const cardForPreviewTemplate = ensureElement<HTMLTemplateElement>("#card-preview")
+const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket")
 
-// //Тестирование методов моделей
-// console.log(basketModel.getTotalPrice());
-// //-------------------ПОКУПАТЕЛЬ-----------------------
-// const testData: IBuyer = {
-//   payment: 'online' as TPayment,
-//   email: '',
-//   phone: '+79991234567',
-//   address: '',
-// }
 
-// console.group('записываем данные покупателя в модель:')
-// buyerModel.setBuyerData(testData)
+// ------------ Elements ------------
+const headerElement = ensureElement<HTMLElement>(".header")
+const galleryElement = ensureElement<HTMLElement>(".gallery")
+const modalElement = ensureElement<HTMLElement>(".modal")
 
-// console.log(`получаем данные покупателя из модели:`, buyerModel.getBuyerData())
-// console.log(`валидируем поля:`, buyerModel.validate())
-// console.log(`очищаем поля:`)
-// buyerModel.clear()
-// console.log(`проверяем очистились ли поля:`, buyerModel.getBuyerData())
-// console.groupEnd();
+// const basketElement = cloneTemplate<HTMLTemplateElement>(basketTemplate)
+// const formOrderElement = cloneTemplate<HTMLTemplateElement>(formOrderTemplate)
+// const formContactsElement = cloneTemplate<HTMLTemplateElement>(formContactsTemplate)
+// const successElement = cloneTemplate<HTMLTemplateElement>(successTemplate)
 
-// //Получаем данные с сервера
-// apiClient.getAllProducts().then(data => {
 
-// // -------------------ТОВАРЫ-----------------------
-//   console.group('записываем товары в модель:')
-//   productsModel.setProducts(data)
-//   console.log(`получили данные в модель:`, productsModel.getProducts())
+// ------------ Initialization ------------
 
-//   let selectedProduct = productsModel.getProductById('854cef69-976d-4c2a-a18c-2aa45046c390')
-//   if (!selectedProduct) { throw new Error('товар не найден') }
+// Event Broker
+const events = new EventEmitter()
 
-//   console.log(`нашли товар по айди, найденный товар:`, selectedProduct)
-//   console.log('записываем найденный товар в модель:')
-//   productsModel.setSelectedProduct(selectedProduct)
-//   console.log(`проверяем записался ли выбранный товар в модели:`, productsModel.getSelectedProduct())
-//   console.groupEnd()
+// Api
+const baseApi = new Api(API_URL)
+const apiClient = new ApiClient(baseApi)
 
-// // -------------------КОРЗИНА-----------------------
-//   console.group('добавляем товар в корзину:')
-//   basketModel.addToBasket(selectedProduct)
-//   console.log(`добавился ли он?`, basketModel.isInBasketById('854cef69-976d-4c2a-a18c-2aa45046c390'))
-//   console.log(`количество товаров в корзине:`, basketModel.getQuantity())
-//   console.log(`полная стоимость товаров в корзине:`, basketModel.getTotalPrice())
-//   console.log(`какие товары в корзине:`, basketModel.getPurchases())
+// Models
+const productsModel = new Products(events)
+const basketModel = new Basket(events)
+// const buyerModel = new Buyer(events)
 
-//   //выбираем ещё один товар чтобы проверить его удаление из корзины
-//   selectedProduct = productsModel.getProductById('b06cde61-912f-4663-9751-09956c0eed67')
-//   if (!selectedProduct) { throw new Error('товар не найден') }
+// Views
+const headerView = new HeaderView(headerElement, events)
+const modalView = new ModalView(modalElement, events)
+const galleryView = new GalleryView(galleryElement)
+// const basketView = new BasketView(basketElement, events);
 
-//   console.log(`ещё один товар:`, selectedProduct)
-//   console.log('добавляем ещё один товар в корзину:')
-//   basketModel.addToBasket(selectedProduct)
-//   console.log(`добавился ли он?`, basketModel.isInBasketById('54df7dcb-1213-4b3c-ab61-92ed5f845535'))
-//   console.log(`Изменилась ли полная стоимость товаров в корзине:`, basketModel.getTotalPrice())
-//   console.log(`какие товары в корзине:`, basketModel.getPurchases())
-//   console.log('удаляем товар из корзины:')
-//   basketModel.removeFromBasket(selectedProduct)
-//   console.log(`есть ли теперь он в корзине?`, basketModel.isInBasketById('54df7dcb-1213-4b3c-ab61-92ed5f845535'))
-//   console.groupEnd();
+
+// Получаем от сервера товары и записываем их в модель
+apiClient.getAllProducts().then(data => {
+  productsModel.setProducts(data)
+})
+
+
+// ------------ Presenter ------------
+
+//СОБЫТИЕ 1) Рендерим каждую карточку товара в галерею
+events.on(eventsMap.PRODUCTS_RECEIVED, (products: IProduct[]) => {
+  const productCards = products.map(product =>
+    new CardForCatalog(cloneTemplate(cardForCatalogTemplate), events)
+    .render(product))
+  galleryView.galleryList = productCards
+})
+
+
+//СОБЫТИЕ 2) Пользователь кликает на карточку из галереи
+events.on(eventsMap.CARD_SELECT, (data: { id: string }) => {
+  const product = productsModel.getProductById(data.id)
+  productsModel.setSelectedProduct(product!) // он точно тут ЕСТЬ
+})
+
+
+//СОБЫТИЕ 3) Рисуем выбранную карточку и открываем модальное окно с превью
+events.on(eventsMap.SELECTED_PRODUCT_SET, (product: IProduct) => {
+  const cardForPreview = new CardForPreview(cloneTemplate(cardForPreviewTemplate), events)
+
+  // ----------- Checks ----------
+  if (product.price === null) {
+      cardForPreview.toggleOrderButton(false)
+      cardForPreview.orderButtonText = 'Недоступно'
+  } else if (basketModel.isInBasket(product.id)) {
+      cardForPreview.orderButtonText = 'Удалить из корзины'
+  } else cardForPreview.orderButtonText = 'Купить'
+
+  // ----------- Render ----------
+  modalView.open(cardForPreview.render(product))
+})
+
+
+// СОБЫТИЕ 4) Пользователь закрывает модальное окно
+events.on(eventsMap.MODAL_CLOSE, () => {
+  modalView.close()
+  productsModel.clearSelectedProduct()
+})
+
+
+// СОБЫТИЕ 5) Добавляем/удаляем товар в корзину
+events.on(eventsMap.CARD_SUBMIT, (data: { id: string }) => {
+  const product = productsModel.getProductById(data.id)
+  const productInBasket = basketModel.isInBasket(data.id)
+
+  // ----------- Checks ----------
+  if (product && !productInBasket) {
+      basketModel.add(product)
+      modalView.close()
+  } else if (product && productInBasket) {
+      basketModel.remove(product)
+      modalView.close()
+  }
+})
+
+
+// СОБЫТИЕ 6) Меняем счетчик товаров корзины в хедере
+events.on(eventsMap.BASKET_COUNT_CHANGE, (data: { quantity: number }) => {
+  headerView.counter = data.quantity
+})
+
+
+// СОБЫТИЕ 7) Пользователь кликает на кнопку корзины
+events.on(eventsMap.BASKET_OPEN, () => {
+  const basketView = renderBasket()
+  modalView.open(basketView)
+})
+
+
+// СОБЫТИЕ 8) Пользователь удаляет товар в открытой корзине
+events.on(eventsMap.CARD_DELETE, (data: { id: string }) => {
+  const product = productsModel.getProductById(data.id)
+  basketModel.remove(product!) // тут он точно-точно ЕСТЬ в корзине
+
+  // ----------- Checks ----------
+  if (modalView.isOpen()) {
+    const basketContent = renderBasket()
+    modalView.content = basketContent
+  }
+})
+
+// СОБЫТИЕ 9) Пользователь кликает кнопку "Оформить"
+// events.on(eventsMap.BASKET_SUBMIT, () => {
+
 // })
-// .catch(e => console.error(`ошибка получения товаров:`, e))
+
+
+// ------------ Functions ------------
+
+// ------ Basket
+
+// Получаем данные корзины из модели
+function getBasketViewData(): IBasketViewData {
+  const purchases = basketModel.getPurchases()
+  const totalPrice = basketModel.getTotalPrice()
+  const quantity = basketModel.getQuantity()
+  const hasProducts = quantity > 0
+
+  return {
+    purchases,
+    totalPrice,
+    quantity,
+    hasProducts,
+  }
+}
+
+// Рисуем карточки для корзины
+function renderBasketCards(purchases: IProduct[]): HTMLElement[] {
+  return purchases.map((product: IProduct, index: number) => {
+    const cardForBasketView = new CardForBasket(cloneTemplate(cardForBasketTemplate), events)
+    cardForBasketView.index = index + 1
+    return cardForBasketView.render(product)
+  })
+}
+
+// Конфигурация отображения корзины
+function configureBasketView(basketView: BasketView, data: IBasketViewData): void {
+  basketView.setEmptyMessage(data.hasProducts!)
+  basketView.toggleSubmitButton(data.hasProducts!)
+  basketView.setButtonText('Оформить')
+
+  basketView.totalPrice = data.totalPrice
+  basketView.basketList = data.hasProducts ? renderBasketCards(data.purchases!) : []
+}
+
+// Рисуем корзину
+function renderBasket(): HTMLElement {
+  const basketView = new BasketView(cloneTemplate(basketTemplate), events)
+  const basketViewData = getBasketViewData()
+  configureBasketView(basketView, basketViewData)
+  return basketView.render()
+}

@@ -17,28 +17,22 @@ export const categoryMap = {
 };
 
 export const eventsMap = {
-  //Modal events
-  MODAL_CLOSE: 'modal:close',
-
-  //Buyer events
-  BUYER_CHANGE: 'buyer:change',
-  BUYER_CLEAR: 'buyer:clear',
-  BUYER_VALIDATE: 'buyer:validate',
+  // Products events
+  PRODUCTS_RECEIVED: 'products:received', //
+  CARD_SELECT: 'card:select', //
+  CARD_SUBMIT: 'card:submit', //
+  CARD_DELETE: 'card:delete', //
+  SELECTED_PRODUCT_SET: 'selected:product:changed', //
+  SELECTED_PRODUCT_CLEAR: 'selected:product:clear', //
 
   //Basket events
-  BASKET_OPEN: 'basket:open',
-  BASKET_SUBMIT: 'basket:submit',
-  BASKET_CHANGE: 'basket:change',
-  BASKET_CLEAR: 'basket:clear',
+  BASKET_OPEN: 'basket:open', //
+  BASKET_SUBMIT: 'basket:submit', //
+  BASKET_CHANGE: 'basket:change', //
+  BASKET_COUNT_CHANGE: 'basket:change', //
+  BASKET_CLEAR: 'basket:clear', //
 
-  //Product events
-  PRODUCT_OPEN: 'product:open',
-  PRODUCT_ADD: 'product:add',
-  PRODUCT_DELETE: 'product:delete',
-  PRODUCTS_RECEIVED: 'products:received',
-  PRODUCT_SELECT: 'product:select',
-
-  // OrderForm events  
+  // OrderForm events
   PAYMENT_CHANGED: 'payment:changed',
   ADDRESS_CHANGED: 'address:changed',
   ORDER_SUBMIT: 'order:submit',
@@ -48,8 +42,16 @@ export const eventsMap = {
   PHONE_CHANGED: 'phone:changed',
   CONTACTS_SUBMIT: 'contacts:submit',
 
+  //Buyer events
+  BUYER_CHANGE: 'buyer:change',
+  BUYER_CLEAR: 'buyer:clear',
+  BUYER_VALIDATE: 'buyer:validate',
+
   //Success events
-  SUCCESS_CONFIRM: 'success:confirm'
+  SUCCESS_CONFIRM: 'success:confirm', //
+
+  //Modal events
+  MODAL_CLOSE: 'modal:close', //
 };
 
 export const settings = {

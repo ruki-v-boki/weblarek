@@ -5,13 +5,13 @@ import { ensureElement } from "../../../utils/utils";
 
 
 export class ContactsForm extends FormView {
-  private _email: HTMLInputElement;
-  private _phone: HTMLInputElement;
+  private _email: HTMLInputElement
+  private _phone: HTMLInputElement
 
   constructor(container: HTMLElement, events: IEvents){
     super(container, events)
-    this._email = ensureElement<HTMLInputElement>('[name="email"]', container);
-    this._phone = ensureElement<HTMLInputElement>('[name="phone"]', container);
+    this._email = ensureElement<HTMLInputElement>('[name="email"]', container)
+    this._phone = ensureElement<HTMLInputElement>('[name="phone"]', container)
 
     // ------------LISTENERS------------
     this._email.addEventListener('input', () => {
@@ -25,3 +25,5 @@ export class ContactsForm extends FormView {
     })
   }
 }
+
+// Скорее всего придется создать одно событие для всех полей формы

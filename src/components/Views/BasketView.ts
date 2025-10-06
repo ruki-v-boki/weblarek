@@ -6,21 +6,25 @@ import { IBasketViewData } from "../../types";
 
 
 export class BasketView extends Component<IBasketViewData> {
-  private _basketList: HTMLUListElement;
-  private _submitButton: HTMLButtonElement;
-  private _totalPrice: HTMLElement;
+  private _basketList: HTMLUListElement
+  private _submitButton: HTMLButtonElement
+  private _totalPrice: HTMLElement
+  private _emptyMessage: HTMLElement
 
   constructor(container: HTMLElement, private _events: IEvents){
     super(container)
-    this._basketList = ensureElement<HTMLUListElement>('.basket__list', container);
-    this._submitButton = ensureElement<HTMLButtonElement>('.basket__button', container);
-    this._totalPrice = ensureElement<HTMLElement>('.basket__price', container);
+    this._basketList = ensureElement<HTMLUListElement>('.basket__list', container)
+    this._submitButton = ensureElement<HTMLButtonElement>('.basket__button', container)
+    this._totalPrice = ensureElement<HTMLElement>('.basket__price', container)
+    this._emptyMessage = ensureElement<HTMLElement>('.basket__empty', container)
 
     // ------------LISTENERS------------
     this._submitButton.addEventListener('click', () => {
       this._events.emit(eventsMap.BASKET_SUBMIT)
     })
   }
+
+  // -----------------------------------
 
   set basketList(purchases: HTMLElement[]){
     this._basketList.replaceChildren(...purchases)
@@ -30,9 +34,18 @@ export class BasketView extends Component<IBasketViewData> {
     this._totalPrice.textContent = `${value} синапсов`
   }
 
+  // -----------------------------------
+
+  setButtonText(value: string): void {
+    this._submitButton.textContent = value
+  }
+
+  setEmptyMessage(value: boolean): void {
+    this._emptyMessage.classList.toggle('basket__empty-disabled', value)
+    this._basketList.classList.toggle('basket__list-disabled', !value)
+  }
+
   toggleSubmitButton(value: boolean): void {
-    value
-    ? this._submitButton.disabled = false
-    : this._submitButton.disabled = true
+    this._submitButton.toggleAttribute('disabled', !value)
   }
 }

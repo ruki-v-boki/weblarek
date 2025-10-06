@@ -10,6 +10,31 @@
     padding: 0;
     margin: 0;
     flex-grow: 1;
+
+    &-disabled {
+      display: none;
+    }
+  }
+
+  &__empty {
+    font-size: 30px;
+    font-weight: 200;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+
+    &-disabled {
+      display: none;
+    }
+
+    &-text {
+      opacity: 0.3;
+    }
+
+    &-cabbage {
+      opacity: 1;
+      font-size: 25px;
+    }
   }
 
   &__item {

@@ -1,6 +1,6 @@
 
-// -------------INTERFACE----------------------------------
-// ------Api------
+// ------------ INTERFACE ------------
+// ------ Api ------
 export interface IApi {
   get<T extends object>(uri: string): Promise<T>;
   post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
@@ -12,7 +12,7 @@ export interface IApiResponse<T> {
 }
 
 
-// ------Model------
+// ------ Model ------
 export interface IProduct {
   id: string;
   title: string;
@@ -37,13 +37,16 @@ export interface IValidationErrors {
 }
 
 
-// ------View------
+// ------ View ------
 export interface IHeaderData {
   counter: number
 }
 
 export interface IBasketViewData {
   totalPrice: number
+  purchases?: IProduct[]
+  quantity?: number
+  hasProducts?: boolean
 }
 
 export interface IGalleryData {
@@ -63,7 +66,7 @@ export interface IFormErrorData {
 }
 
 
-// -------------TYPE-----------------------------------------
+// ------------ TYPE ------------
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 export type TPayment = 'online' | 'cash' | '';
 export type TProductsResponse = IApiResponse<IProduct>

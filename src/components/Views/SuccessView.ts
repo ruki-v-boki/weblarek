@@ -6,19 +6,21 @@ import { ensureElement } from "../../utils/utils";
 
 
 export class Success extends Component<ISuccessData>{
-  private _totalPrice: HTMLElement;
-  private _confirmButton: HTMLButtonElement;
+  private _totalPrice: HTMLElement
+  private _confirmButton: HTMLButtonElement
 
   constructor(container: HTMLElement, private _events: IEvents){
     super(container)
-    this._totalPrice = ensureElement<HTMLElement>('.order-success__description', container);
-    this._confirmButton = ensureElement<HTMLButtonElement>('.order-success__close', container);
+    this._totalPrice = ensureElement<HTMLElement>('.order-success__description', container)
+    this._confirmButton = ensureElement<HTMLButtonElement>('.order-success__close', container)
 
     // ------------LISTENERS------------
     this._confirmButton.addEventListener('click', () => {
       this._events.emit(eventsMap.SUCCESS_CONFIRM)
     })
   }
+
+  // -----------------------------------
 
   set totalPrice(value: number){
     this._totalPrice.textContent = `Списано ${value} синапсов`

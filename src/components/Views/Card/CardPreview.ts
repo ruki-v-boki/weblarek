@@ -5,19 +5,21 @@ import { ensureElement } from "../../../utils/utils";
 
 
 export class CardForPreview extends CardView {
-  private _description: HTMLElement;
-  private _orderButton: HTMLButtonElement;
+  private _description: HTMLElement
+  private _orderButton: HTMLButtonElement
 
   constructor(container: HTMLElement, events: IEvents){
     super(container, events)
-    this._description = ensureElement<HTMLElement>('.card__text', container);
-    this._orderButton = ensureElement<HTMLButtonElement>('.card__button', container);
+    this._description = ensureElement<HTMLElement>('.card__text', container)
+    this._orderButton = ensureElement<HTMLButtonElement>('.card__button', container)
 
     // ------------LISTENERS------------
     this._orderButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PRODUCT_ADD, { id: this._id })
+      this._events.emit(eventsMap.CARD_SUBMIT, { id: this._id })
     })
   }
+
+  // -----------------------------------
 
   set description(value: string){
     this._description.textContent = value
@@ -27,9 +29,9 @@ export class CardForPreview extends CardView {
     this._orderButton.textContent = value
   }
 
+  // -----------------------------------
+
   toggleOrderButton(value: boolean): void {
-    value
-    ? this._orderButton.disabled = false
-    : this._orderButton.disabled = true
+    this._orderButton.toggleAttribute('disabled', !value)
   }
 }

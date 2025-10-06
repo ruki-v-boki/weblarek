@@ -5,19 +5,21 @@ import { ensureElement } from "../../../utils/utils";
 
 
 export class CardForBasket extends CardView {
-  private _indexElement: HTMLElement;
-  private _deleteButton: HTMLButtonElement;
+  private _indexElement: HTMLElement
+  private _deleteButton: HTMLButtonElement
 
   constructor(container: HTMLElement, events: IEvents){
     super(container, events)
-    this._indexElement = ensureElement<HTMLElement>('.basket__item-index', container);
-    this._deleteButton = ensureElement<HTMLButtonElement>('.basket__item-delete', container);
+    this._indexElement = ensureElement<HTMLElement>('.basket__item-index', container)
+    this._deleteButton = ensureElement<HTMLButtonElement>('.basket__item-delete', container)
 
     // ------------LISTENERS------------
     this._deleteButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PRODUCT_DELETE, { id: this._id })
+      this._events.emit(eventsMap.CARD_DELETE, { id: this._id })
     })
   }
+
+  // -----------------------------------
 
   set index(value: number){
     this._indexElement.textContent = value.toString()

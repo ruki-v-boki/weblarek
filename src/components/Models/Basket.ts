@@ -4,13 +4,14 @@ import { eventsMap } from "../../utils/constants"
 
 
 export class Basket {
-  private _purchases: Set<IProduct>;
+  private _purchases: Set<IProduct>
 
   constructor(private _events: IEvents){
     this._purchases = new Set()
   }
 
-// ------------GET------------
+  // -----------------------------------
+
   getPurchases(): IProduct[] {
     return Array.from(this._purchases)
   }
@@ -26,17 +27,15 @@ export class Basket {
     return this._purchases.size
   }
 
-// ---------------------------
-  isInBasket(id: string): boolean {
-    return Array.from(this._purchases)
-    .some(product => product.id === id)
-  }
+  // -----------------------------------
 
   add(product: IProduct): void {
     this._purchases.add(product)
+    this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
+      quantity: this.getQuantity(),
+    })
     this._events.emit(eventsMap.BASKET_CHANGE, {
-      addedProduct: product,
-      purсhases: this.getPurchases(),
+      purchases: this.getPurchases(),
       totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity(),
     })
@@ -44,11 +43,21 @@ export class Basket {
 
   remove(product: IProduct): void {
     this._purchases.delete(product)
+    this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
+      quantity: this.getQuantity(),
+    })
     this._events.emit(eventsMap.BASKET_CHANGE, {
-      purсhases: this.getPurchases(),
+      purchases: this.getPurchases(),
       totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity(),
     })
+  }
+
+  // -----------------------------------
+
+  isInBasket(id: string): boolean {
+    return Array.from(this._purchases)
+    .some(product => product.id === id)
   }
 
   clear(): void {

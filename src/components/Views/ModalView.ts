@@ -5,14 +5,14 @@ import { IModalData } from "../../types";
 import { ensureElement } from "../../utils/utils";
 
 
-export class Modal extends Component<IModalData> {
-  private _closeButton: HTMLButtonElement;
-  private _content: HTMLElement;
+export class ModalView extends Component<IModalData> {
+  private _closeButton: HTMLButtonElement
+  private _content: HTMLElement
 
   constructor(container: HTMLElement, private _events: IEvents){
     super(container)
-    this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
-    this._content = ensureElement<HTMLElement>('.modal__content', container);
+    this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container)
+    this._content = ensureElement<HTMLElement>('.modal__content', container)
 
     // ------------LISTENERS------------
     this._closeButton.addEventListener('click', () => {
@@ -25,15 +25,24 @@ export class Modal extends Component<IModalData> {
     })
   }
 
+  // -----------------------------------
+
   set content(content: HTMLElement){
     this._content.replaceChildren(content)
   }
 
-  open(): void {
+  // -----------------------------------
+
+  open(content: HTMLElement): void {
+    this._content.replaceChildren(content)
     this.container.classList.add('modal_active')
   }
 
   close(): void {
     this.container.classList.remove('modal_active')
+  }
+
+  isOpen(): boolean {
+    return this.container.classList.contains('modal_active')
   }
 }

@@ -4,28 +4,28 @@ import { eventsMap } from "../../utils/constants";
 
 
 export class Products {
-  private _allProducts: IProduct[];
-  private _selectedProduct: IProduct | null;
+  private _allProducts: IProduct[]
+  private _selectedProduct: IProduct | null
 
   constructor(private _events: IEvents){
-    this._allProducts = [];
-    this._selectedProduct = null;
+    this._allProducts = []
+    this._selectedProduct = null
   }
 
-// ------------SET------------
-  setProducts(products: IProduct[]) {
+  // -----------------------------------
+
+  setProducts(products: IProduct[]): void {
     this._allProducts = products
-    this._events.emit(eventsMap.PRODUCTS_RECEIVED,
-      { products: this._allProducts })
+    this._events.emit(eventsMap.PRODUCTS_RECEIVED, products)
   }
 
-  setSelectedProduct(product: IProduct) {
+  setSelectedProduct(product: IProduct): void {
     this._selectedProduct = product
-    this._events.emit(eventsMap.PRODUCT_SELECT,
-      { selectedProduct: this._selectedProduct })
+    this._events.emit(eventsMap.SELECTED_PRODUCT_SET, product)
   }
 
-// ------------GET------------
+  // -----------------------------------
+
   getAllProducts(): IProduct[] {
     return this._allProducts
   }
@@ -36,8 +36,15 @@ export class Products {
 
   getSelectedProduct(): IProduct {
     if (!this._selectedProduct) {
-      throw new Error('Ничего не выбрано')
+      console.log('Ничего не выбрано')
     }
     return this._selectedProduct as IProduct
+  }
+
+  // -----------------------------------
+
+  clearSelectedProduct(): void {
+    this._selectedProduct = null
+    this._events.emit(eventsMap.SELECTED_PRODUCT_CLEAR)
   }
 }

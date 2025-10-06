@@ -4,19 +4,20 @@ import { IBuyer, TPayment, IValidationErrors } from "../../types";
 
 
 export class Buyer {
-  private _address: string;
-  private _phone: string;
-  private _email: string;
-  private _payment: TPayment;
+  private _address: string
+  private _phone: string
+  private _email: string
+  private _payment: TPayment
 
   constructor(private _events: IEvents){
-    this._address = '';
-    this._phone = '';
-    this._email = '';
-    this._payment = '';
+    this._address = ''
+    this._phone = ''
+    this._email = ''
+    this._payment = ''
   }
 
-// -------------SET-------------------------
+  // -----------------------------------
+
   setBuyerData(data: IBuyer) {
     this._address = data.address
     this._phone = data.phone.trim()
@@ -26,7 +27,8 @@ export class Buyer {
     this._events.emit(eventsMap.BUYER_CHANGE, data)
   }
 
-// -------------GET-------------------------
+  // -----------------------------------
+
   getBuyerData(): IBuyer {
     return {
       address: this._address,
@@ -36,7 +38,8 @@ export class Buyer {
     }
   }
 
-// -----------------------------------------
+  // -----------------------------------
+
   clear(): void {
     this._address = '',
     this._phone = '',
