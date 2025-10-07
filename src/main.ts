@@ -21,10 +21,11 @@ import { API_URL } from './utils/constants';
 import { IBasketViewData } from './types';
 import { IProduct } from './types';
 import { OrderForm } from './components/Views/Forms/Order';
+import { BasketViewPresenter } from './components/Views/BasketPresenter';
 
 
 // ------------ Templates ------------
-const basketTemplate = ensureElement<HTMLTemplateElement>("#basket")
+export const basketTemplate = ensureElement<HTMLTemplateElement>("#basket")
 // Forms
 // const formOrderTemplate = ensureElement<HTMLTemplateElement>("#order")
 // const formContactsTemplate = ensureElement<HTMLTemplateElement>("#contacts")
@@ -32,7 +33,7 @@ const basketTemplate = ensureElement<HTMLTemplateElement>("#basket")
 // Cards
 const cardForCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog")
 const cardForPreviewTemplate = ensureElement<HTMLTemplateElement>("#card-preview")
-const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket")
+export const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket")
 
 
 // ------------ Elements ------------
@@ -49,7 +50,7 @@ const modalElement = ensureElement<HTMLElement>(".modal")
 // ------------ Initialization ------------
 
 // Event Broker
-const events = new EventEmitter()
+export const events = new EventEmitter()
 
 // Api
 const baseApi = new Api(API_URL)
@@ -64,7 +65,7 @@ const basketModel = new Basket(events)
 const headerView = new HeaderView(headerElement, events)
 const modalView = new ModalView(modalElement, events)
 const galleryView = new GalleryView(galleryElement)
-// const basketView = new BasketView(basketElement, events);
+const basketViewPresenter = new BasketViewPresenter(basketModel, cardForBasketTemplate, events)
 
 
 // Получаем от сервера товары и записываем их в модель
@@ -139,71 +140,19 @@ events.on(eventsMap.BASKET_COUNT_CHANGE, (data: { quantity: number }) => {
 
 // СОБЫТИЕ 7) Пользователь кликает на кнопку корзины
 events.on(eventsMap.BASKET_OPEN, () => {
-  const basketView = renderBasket()
+  const basketView = basketViewPresenter.render() // --------------- Новый рендер
   modalView.open(basketView)
-})
+});
 
 
 // СОБЫТИЕ 8) Пользователь удаляет товар в открытой корзине
 events.on(eventsMap.CARD_DELETE, (data: { id: string }) => {
   const product = productsModel.getProductById(data.id)
-  basketModel.remove(product!) // тут он точно-точно ЕСТЬ в корзине
+  basketModel.remove(product!)
 
   // ----------- Checks ----------
   if (modalView.isOpen()) {
-    const basketContent = renderBasket()
+    const basketContent = basketViewPresenter.render() // ---------- Новый рендер
     modalView.content = basketContent
   }
 })
-
-// СОБЫТИЕ 9) Пользователь кликает кнопку "Оформить"
-// events.on(eventsMap.BASKET_SUBMIT, () => {
-
-// })
-
-
-// ------------ Functions ------------
-
-// ------ Basket
-
-// Получаем данные корзины из модели
-function getBasketViewData(): IBasketViewData {
-  const purchases = basketModel.getPurchases()
-  const totalPrice = basketModel.getTotalPrice()
-  const quantity = basketModel.getQuantity()
-  const hasProducts = quantity > 0
-
-  return {
-    purchases,
-    totalPrice,
-    quantity,
-    hasProducts,
-  }
-}
-
-// Рисуем карточки для корзины
-function renderBasketCards(purchases: IProduct[]): HTMLElement[] {
-  return purchases.map((product: IProduct, index: number) => {
-    const cardForBasketView = new CardForBasket(cloneTemplate(cardForBasketTemplate), events)
-    cardForBasketView.index = index + 1
-    return cardForBasketView.render(product)
-  })
-}
-
-// Конфигурация отображения корзины
-function configureBasketView(basketView: BasketView, data: IBasketViewData): void {
-  basketView.setEmptyMessage(data.hasProducts!)
-  basketView.toggleSubmitButton(data.hasProducts!)
-  basketView.setButtonText('Оформить')
-
-  basketView.totalPrice = data.totalPrice
-  basketView.basketList = data.hasProducts ? renderBasketCards(data.purchases!) : []
-}
-
-// Рисуем корзину
-function renderBasket(): HTMLElement {
-  const basketView = new BasketView(cloneTemplate(basketTemplate), events)
-  const basketViewData = getBasketViewData()
-  configureBasketView(basketView, basketViewData)
-  return basketView.render()
-}

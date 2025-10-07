@@ -44,9 +44,9 @@ export interface IHeaderData {
 
 export interface IBasketViewData {
   totalPrice: number
-  purchases?: IProduct[]
-  quantity?: number
-  hasProducts?: boolean
+  purchases: IProduct[]
+  quantity: number
+  hasProducts: boolean
 }
 
 export interface IGalleryData {
@@ -64,6 +64,12 @@ export interface ISuccessData {
 export interface IFormErrorData {
   error: string
 }
+
+// ----------------------------------
+export interface IBasketViewPresenter {
+  render(): HTMLElement
+}
+// ----------------------------------
 
 
 // ------------ TYPE ------------

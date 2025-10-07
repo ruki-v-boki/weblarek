@@ -34,21 +34,11 @@ export class Basket {
     this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
       quantity: this.getQuantity(),
     })
-    this._events.emit(eventsMap.BASKET_CHANGE, {
-      purchases: this.getPurchases(),
-      totalPrice: this.getTotalPrice(),
-      quantity: this.getQuantity(),
-    })
   }
 
   remove(product: IProduct): void {
     this._purchases.delete(product)
     this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
-      quantity: this.getQuantity(),
-    })
-    this._events.emit(eventsMap.BASKET_CHANGE, {
-      purchases: this.getPurchases(),
-      totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity(),
     })
   }
