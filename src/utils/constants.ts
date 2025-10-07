@@ -18,19 +18,19 @@ export const categoryMap = {
 
 export const eventsMap = {
   // Products events
-  PRODUCTS_RECEIVED: 'products:received', //
-  CARD_SELECT: 'card:select', //
-  CARD_SUBMIT: 'card:submit', //
-  CARD_DELETE: 'card:delete', //
-  SELECTED_PRODUCT_SET: 'selected:product:changed', //
-  SELECTED_PRODUCT_CLEAR: 'selected:product:clear', //
+  PRODUCTS_RECEIVED: 'products:received',
+  CARD_SELECT: 'card:select',
+  CARD_SUBMIT: 'card:submit',
+  CARD_DELETE: 'card:delete',
+  SELECTED_PRODUCT_SET: 'selected:product:changed',
+  SELECTED_PRODUCT_CLEAR: 'selected:product:clear',
 
   //Basket events
-  BASKET_OPEN: 'basket:open', //
-  BASKET_SUBMIT: 'basket:submit', //
-  BASKET_CHANGE: 'basket:change', //
-  BASKET_COUNT_CHANGE: 'basket:change', //
-  BASKET_CLEAR: 'basket:clear', //
+  BASKET_OPEN: 'basket:open',
+  BASKET_PLACE_ORDER: 'basket:place:order',
+  BASKET_CHANGE: 'basket:change',
+  BASKET_COUNT_CHANGE: 'basket:change',
+  BASKET_CLEAR: 'basket:clear',
 
   // OrderForm events
   PAYMENT_CHANGED: 'payment:changed',
@@ -48,11 +48,13 @@ export const eventsMap = {
   BUYER_VALIDATE: 'buyer:validate',
 
   //Success events
-  SUCCESS_CONFIRM: 'success:confirm', //
+  SUCCESS_CONFIRM: 'success:confirm',
 
   //Modal events
-  MODAL_CLOSE: 'modal:close', //
+  MODAL_CLOSE: 'modal:close',
 };
+
+
 
 export const settings = {
 

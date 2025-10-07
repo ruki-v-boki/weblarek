@@ -2,6 +2,7 @@ import { IEvents } from "../../base/Events";
 import { FormView } from "./FormView";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
+import { IValidationErrors } from "../../../types";
 
 
 export class OrderForm extends FormView {
@@ -17,24 +18,46 @@ export class OrderForm extends FormView {
 
     // ------------LISTENERS------------
     this._onlinePayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PAYMENT_CHANGED, { payment: 'online' })
+      this._events.emit(eventsMap.PAYMENT_CHANGED, {
+        payment: 'online', 
+        button: this._onlinePayButton,
+        form: this
+      })
     })
+
     this._cashPayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PAYMENT_CHANGED, { payment: 'cash' })
+      this._events.emit(eventsMap.PAYMENT_CHANGED, {
+        payment: 'cash', 
+        button: this._cashPayButton,
+        form: this
+      })
     })
+
     this._address.addEventListener('input', () => {
-      this._events.emit(eventsMap.ADDRESS_CHANGED, { address: this._address.value })
+      this._events.emit(eventsMap.ADDRESS_CHANGED, {
+        address: this._address.value,
+        form: this
+      })
     })
-    this._submitButton.addEventListener('click', () => {
+    this._submitButton.addEventListener('click', (event) => {
+      event.preventDefault()
       this._events.emit(eventsMap.ORDER_SUBMIT)
     })
   }
 
   // -----------------------------------
 
+  focusAddress(): void {
+    this._address?.focus()
+  }
+
   togglePaymentButtonStatus(button: HTMLButtonElement, status: boolean): void {
     button.classList.toggle('button_alt-active', status)
   }
-}
 
-// Скорее всего придется создать одно событие для всех полей формы
+  checkIsFormValid(errors: IValidationErrors): boolean {
+    this.clearError()
+    this.error = errors.payment || errors.address || ''
+    return !errors.payment && !errors.address
+  }
+}

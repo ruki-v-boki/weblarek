@@ -90,4 +90,3 @@ export type TOrderResponse = {
   id: string;
   total: number;
 }
-

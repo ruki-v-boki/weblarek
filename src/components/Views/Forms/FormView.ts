@@ -1,7 +1,7 @@
 import { IEvents } from "../../base/Events";
 import { Component } from "../../base/Component";
 import { ensureElement } from "../../../utils/utils";
-import { IFormErrorData } from "../../../types";
+import { IFormErrorData, IValidationErrors } from "../../../types";
 
 
 export abstract class FormView extends Component<IFormErrorData> {
@@ -29,4 +29,7 @@ export abstract class FormView extends Component<IFormErrorData> {
   clearError(): void {
     this._error.textContent = ''
   }
+
+  abstract checkIsFormValid(errors: IValidationErrors): boolean
+
 }

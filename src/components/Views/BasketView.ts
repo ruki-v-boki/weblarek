@@ -20,7 +20,7 @@ export class BasketView extends Component<IBasketViewData> {
 
     // ------------LISTENERS------------
     this._submitButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.BASKET_SUBMIT)
+      this._events.emit(eventsMap.BASKET_PLACE_ORDER)
     })
   }
 

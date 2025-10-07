@@ -2,6 +2,7 @@ import { IEvents } from "../../base/Events";
 import { FormView } from "./FormView";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
+import { IValidationErrors } from "../../../types";
 
 
 export class ContactsForm extends FormView {
@@ -24,6 +25,14 @@ export class ContactsForm extends FormView {
       this._events.emit(eventsMap.CONTACTS_SUBMIT)
     })
   }
-}
 
-// Скорее всего придется создать одно событие для всех полей формы
+  focusEmail(): void {
+    this._email?.focus()
+  }
+
+  checkIsFormValid(errors: IValidationErrors): boolean {
+    this.clearError();
+    this.error = errors.email || errors.phone || ''
+    return !errors.email && !errors.phone
+  }
+}

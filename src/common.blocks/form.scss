@@ -35,4 +35,11 @@
       color: color.adjust($primaryLight, $lightness: 23%);
     }
   }
+  
+  &__errors {
+    font-size: 30px;
+  }
+
+
 }
+

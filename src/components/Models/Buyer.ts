@@ -24,10 +24,8 @@ export class Buyer {
     this._email = data.email.trim()
     this._payment = data.payment
 
-    this._events.emit(eventsMap.BUYER_CHANGE, data)
+    this._events.emit(eventsMap.BUYER_CHANGE)
   }
-
-  // -----------------------------------
 
   getBuyerData(): IBuyer {
     return {
@@ -40,6 +38,16 @@ export class Buyer {
 
   // -----------------------------------
 
+  validate(): IValidationErrors {
+    let errors: IValidationErrors = {}
+
+    if (!this._payment) { errors.payment = 'Выберите способ оплаты' }
+    if (!this._email) { errors.email = 'Укажите email' }
+    if (!this._phone) { errors.phone = 'Укажите телефон' }
+    if (!this._address) { errors.address = 'Необходимо указать адрес' }
+    return errors
+  }
+
   clear(): void {
     this._address = '',
     this._phone = '',
@@ -47,17 +55,5 @@ export class Buyer {
     this._payment = ''
 
     this._events.emit(eventsMap.BUYER_CLEAR)
-  }
-
-  validate(): IValidationErrors {
-    let errors: IValidationErrors = {}
-
-    if (!this._payment) { errors.payment = 'Выберите способ оплаты' }
-    if (!this._email) { errors.email = 'Укажите email' }
-    if (!this._phone) { errors.phone = 'Укажите телефон' }
-    if (!this._address) { errors.address = 'Укажите адрес' }
-
-    this._events.emit(eventsMap.BUYER_VALIDATE, errors)
-    return errors
   }
 }
