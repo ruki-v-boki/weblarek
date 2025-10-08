@@ -27,7 +27,7 @@
       <main class="gallery"></main>
     </div>
 
-    <div class="modal" id="modal-container">
+    <div class="modal modal_is-animated" id="modal-container">
       <div class="modal__container">
         <button class="modal__close" aria-label="закрыть"></button>
         <div class="modal__content">
@@ -132,6 +132,16 @@
         </div>
       </form>
     </template>
+
+    <audio id="soundClick" src="/src/sounds/sound_click.mp3" preload="auto"></audio>
+    <audio id="soundClose" src="/src/sounds/sound_close.mp3" preload="auto"></audio>
+    <audio id="soundAddToBasket" src="/src/sounds/sound_basket_add.mp3" preload="auto"></audio>
+    <audio id="soundRemoveFromBasket" src="/src/sounds/sound_basket_delete.mp3" preload="auto"></audio>
+    <audio id="soundPaymentOnline" src="/src/sounds/sound_payment.mp3" preload="auto"></audio>
+    <audio id="soundPaymentCash" src="/src/sounds/sound_cash.mp3" preload="auto"></audio>
+    <audio id="soundKeyboard" src="/src/sounds/sound_keyboard.mp3" preload="auto"></audio>
+    <audio id="soundFormSubmit" src="/src/sounds/sound_form_order.mp3" preload="auto"></audio>
+    <audio id="soundSuccess" src="/src/sounds/sound_winner.mp3" preload="auto"></audio>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

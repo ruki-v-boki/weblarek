@@ -5,7 +5,7 @@ import { ISuccessData } from "../../types";
 import { ensureElement } from "../../utils/utils";
 
 
-export class Success extends Component<ISuccessData>{
+export class SuccessView extends Component<ISuccessData>{
   private _totalPrice: HTMLElement
   private _confirmButton: HTMLButtonElement
 

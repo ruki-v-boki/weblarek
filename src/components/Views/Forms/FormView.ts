@@ -26,6 +26,10 @@ export abstract class FormView extends Component<IFormErrorData> {
     this._submitButton.toggleAttribute('disabled', !value)
   }
 
+  toggleErrorClass(value: boolean): void {
+    this._error.classList.toggle('form__errors-active', value)
+  }
+
   clearError(): void {
     this._error.textContent = ''
   }

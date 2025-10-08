@@ -13,8 +13,24 @@
   padding-bottom: 5vh;
   box-sizing: border-box;
 
+  &_is-animated {
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: visibility 0s 0.3s, opacity 0.3s;
+  }
+
   &_active {
     display: flex;
+    visibility: visible;
+    display: flex;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.3s;
+    cursor: pointer;
+    pointer-events: all;
+    overflow-x: auto;
   }
 
   &__container {

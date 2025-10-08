@@ -9,7 +9,7 @@ export class CardForCatalog extends CardView {
 
     // ------------LISTENERS------------
     this.container.addEventListener('click', () => {
-      this._events.emit(eventsMap.CARD_SELECT, { id: this._id })
+      this._events.emit(eventsMap.PRODUCT_SELECT, { id: this._id })
     })
   }
 }

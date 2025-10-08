@@ -34,6 +34,8 @@
     &-cabbage {
       opacity: 1;
       font-size: 25px;
+      animation: text-sway 0.5s ease-in-out infinite;
+      display: inline-block;
     }
   }
 
@@ -60,5 +62,20 @@
       opacity: 0.5;
       margin-left: 4rem;
     }
+  }
+}
+
+@keyframes text-sway {
+  0%, 100% {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  25% {
+    margin-top: 2px;
+    margin-bottom: -2px;
+  }
+  75% {
+    margin-left: -2px;
+    margin-right: 2px;
   }
 }

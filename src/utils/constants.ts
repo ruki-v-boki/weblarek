@@ -1,3 +1,4 @@
+
 /* Константа для получения полного пути для сервера. Для выполнения запроса 
 необходимо к API_URL добавить только ендпоинт. */
 export const API_URL = `${import.meta.env.VITE_API_ORIGIN}/api/weblarek`; 
@@ -19,33 +20,33 @@ export const categoryMap = {
 export const eventsMap = {
   // Products events
   PRODUCTS_RECEIVED: 'products:received',
-  CARD_SELECT: 'card:select',
-  CARD_SUBMIT: 'card:submit',
-  CARD_DELETE: 'card:delete',
-  SELECTED_PRODUCT_SET: 'selected:product:changed',
-  SELECTED_PRODUCT_CLEAR: 'selected:product:clear',
+  SELECTED_PRODUCT_SET: 'selected:product:set',
+  // SELECTED_PRODUCT_CLEAR: 'selected:product:clear',//??
+  PRODUCT_SELECT: 'product:select',
+  PRODUCT_SUBMIT: 'product:submit',
+  PRODUCT_DELETE: 'product:delete',
 
   //Basket events
   BASKET_OPEN: 'basket:open',
-  BASKET_PLACE_ORDER: 'basket:place:order',
-  BASKET_CHANGE: 'basket:change',
   BASKET_COUNT_CHANGE: 'basket:change',
-  BASKET_CLEAR: 'basket:clear',
+  BASKET_PLACE_ORDER: 'basket:place:order',
+  // BASKET_CLEAR: 'basket:clear', //??
 
   // OrderForm events
-  PAYMENT_CHANGED: 'payment:changed',
-  ADDRESS_CHANGED: 'address:changed',
-  ORDER_SUBMIT: 'order:submit',
+  FORM_PAYMENT_CHANGED: 'payment:changed',
+  FORM_ADDRESS_CHANGED: 'address:changed',
+  FORM_ORDER_SUBMIT: 'order:submit',
 
   // ContactsForm events
-  EMAIL_CHANGED: 'email:changed',
-  PHONE_CHANGED: 'phone:changed',
-  CONTACTS_SUBMIT: 'contacts:submit',
+  FORM_EMAIL_CHANGED: 'email:changed',
+  FORM_PHONE_CHANGED: 'phone:changed',
+  FORM_CONTACTS_SUBMIT: 'contacts:submit',
+  FORM_INPUT_FOCUS: 'form:input:focus',
 
   //Buyer events
   BUYER_CHANGE: 'buyer:change',
-  BUYER_CLEAR: 'buyer:clear',
-  BUYER_VALIDATE: 'buyer:validate',
+  // BUYER_CLEAR: 'buyer:clear',//??
+  // BUYER_VALIDATE: 'buyer:validate',//?
 
   //Success events
   SUCCESS_CONFIRM: 'success:confirm',
@@ -53,8 +54,6 @@ export const eventsMap = {
   //Modal events
   MODAL_CLOSE: 'modal:close',
 };
-
-
 
 export const settings = {
 

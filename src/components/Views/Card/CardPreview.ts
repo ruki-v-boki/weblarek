@@ -15,7 +15,7 @@ export class CardForPreview extends CardView {
 
     // ------------LISTENERS------------
     this._orderButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.CARD_SUBMIT, { id: this._id })
+      this._events.emit(eventsMap.PRODUCT_SUBMIT, { id: this._id })
     })
   }
 

@@ -5,7 +5,7 @@ import { ensureElement } from "../../../utils/utils";
 import { IValidationErrors } from "../../../types";
 
 
-export class OrderForm extends FormView {
+export class FormOrderView extends FormView {
   private _onlinePayButton: HTMLButtonElement
   private _cashPayButton: HTMLButtonElement
   private _address: HTMLInputElement
@@ -18,38 +18,38 @@ export class OrderForm extends FormView {
 
     // ------------LISTENERS------------
     this._onlinePayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PAYMENT_CHANGED, {
+      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, {
         payment: 'online', 
         button: this._onlinePayButton,
-        form: this
+        form: this,
+        soundId: 'paymentOnline'
       })
     })
-
     this._cashPayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PAYMENT_CHANGED, {
+      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, {
         payment: 'cash', 
         button: this._cashPayButton,
-        form: this
+        form: this,
+        soundId: 'paymentCash'
       })
     })
-
     this._address.addEventListener('input', () => {
-      this._events.emit(eventsMap.ADDRESS_CHANGED, {
+      this._events.emit(eventsMap.FORM_ADDRESS_CHANGED, {
         address: this._address.value,
         form: this
       })
     })
     this._submitButton.addEventListener('click', (event) => {
       event.preventDefault()
-      this._events.emit(eventsMap.ORDER_SUBMIT)
+      this._events.emit(eventsMap.FORM_ORDER_SUBMIT)
+    })
+    this.container.addEventListener('focusin', (event) => {
+      if (event.target instanceof HTMLInputElement)
+      this._events.emit(eventsMap.FORM_INPUT_FOCUS)
     })
   }
 
   // -----------------------------------
-
-  focusAddress(): void {
-    this._address?.focus()
-  }
 
   togglePaymentButtonStatus(button: HTMLButtonElement, status: boolean): void {
     button.classList.toggle('button_alt-active', status)

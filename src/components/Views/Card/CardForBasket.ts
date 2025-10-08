@@ -15,7 +15,7 @@ export class CardForBasket extends CardView {
 
     // ------------LISTENERS------------
     this._deleteButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.CARD_DELETE, { id: this._id })
+      this._events.emit(eventsMap.PRODUCT_DELETE, { id: this._id })
     })
   }
 
