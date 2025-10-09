@@ -24,7 +24,7 @@ export class Buyer {
     this._email = data.email.trim()
     this._payment = data.payment
 
-    this._events.emit(eventsMap.BUYER_CHANGE)
+    this._events.emit(eventsMap.BUYER_CHANGE, { payment: this._payment })
   }
 
   // -----------------------------------

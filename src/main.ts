@@ -102,6 +102,7 @@ events.on(eventsMap.PRODUCT_SELECT, (data: { id: string }) => {
 //СОБЫТИЕ 3) Рисуем выбранную карточку и открываем модальное окно с превью
 events.on(eventsMap.SELECTED_PRODUCT_SET, (product: IProduct) => {
   const cardForPreview = new CardForPreview(cloneTemplate(cardForPreviewTemplate), events)
+  const renderedCard = cardForPreview.render(product)
 
   if (product.price === null) {
       cardForPreview.toggleOrderButton(false)
@@ -110,7 +111,7 @@ events.on(eventsMap.SELECTED_PRODUCT_SET, (product: IProduct) => {
       cardForPreview.orderButtonText = 'Удалить из корзины'
   } else cardForPreview.orderButtonText = 'Купить'
 
-  modalView.open(cardForPreview.render(product))
+  modalView.open(renderedCard)
   playSound(soundClick)
 })
 
@@ -193,14 +194,8 @@ const currentForm = {
 // СОБЫТИЕ 9) Клик по кнопкам выбора оплаты
 events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: {
   payment: string,
-  button: HTMLButtonElement,
-  form: FormOrderView,
   soundId: string
 }) => {
-  data.form.togglePaymentButtonStatus(data.form['_onlinePayButton'], false)
-  data.form.togglePaymentButtonStatus(data.form['_cashPayButton'], false)
-  data.form.togglePaymentButtonStatus(data.button, true)
-
   const currentData = buyerModel.getBuyerData()
   buyerModel.setBuyerData({
     ...currentData,
@@ -216,10 +211,7 @@ events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: {
 
 
 // Событие 10) Ввод адреса в инпут
-events.on(eventsMap.FORM_ADDRESS_CHANGED, (data: {
-  address: string,
-  form: FormOrderView
-}) => {
+events.on(eventsMap.FORM_ADDRESS_CHANGED, (data: { address: string }) => {
   const currentData = buyerModel.getBuyerData()
   buyerModel.setBuyerData({
     ...currentData,
@@ -263,15 +255,18 @@ events.on(eventsMap.FORM_PHONE_CHANGED, (data: { phone: string }) => {
 })
 
 
-// Событие 14) Данные в модели изменились
+// Событие 14) Данные покупателя в модели изменились
 events.on(eventsMap.BUYER_CHANGE, () => {
-  const errors = buyerModel.validate()
   const form = currentForm.get()
+  if (!form) return
 
-  if (form) {
-    const canSubmit = form.checkIsFormValid(errors)
-    form.toggleSubmitButton(canSubmit)
-    form.toggleErrorClass(!canSubmit)
+  const errors = buyerModel.validate()
+  const isValid = form.checkIsFormValid(errors)
+  form.toggleSubmitButton(isValid)
+  form.toggleErrorClass(!isValid)
+
+  if (form instanceof FormOrderView) {
+    form.togglePaymentButtonStatus(buyerModel.getBuyerData().payment)
   }
 })
 

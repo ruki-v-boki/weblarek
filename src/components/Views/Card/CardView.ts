@@ -36,9 +36,9 @@ export abstract class CardView extends Component<IProduct> {
   }
 
   set image(src: string){
-    this._image 
-    ? this.setImage(this._image,CDN_URL + `${src}`, this._title.textContent)
-    : ''
+    if (this._image) {
+      this.setImage(this._image,CDN_URL + `${src}`, this._title.textContent || '')
+    }
   }
 
   set category(name: string){

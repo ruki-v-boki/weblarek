@@ -1,6 +1,6 @@
+import { IValidationErrors, TPayment } from "../../../types";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
-import { IValidationErrors } from "../../../types";
 import { IEvents } from "../../base/Events";
 import { FormView } from "./FormView";
 
@@ -19,25 +19,18 @@ export class FormOrderView extends FormView {
     // ------------LISTENERS------------
     this._onlinePayButton.addEventListener('click', () => {
       this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, {
-        payment: 'online', 
-        button: this._onlinePayButton,
-        form: this,
+        payment: 'online',
         soundId: 'paymentOnline'
       })
     })
     this._cashPayButton.addEventListener('click', () => {
       this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, {
-        payment: 'cash', 
-        button: this._cashPayButton,
-        form: this,
+        payment: 'cash',
         soundId: 'paymentCash'
       })
     })
     this._address.addEventListener('input', () => {
-      this._events.emit(eventsMap.FORM_ADDRESS_CHANGED, {
-        address: this._address.value,
-        form: this
-      })
+      this._events.emit(eventsMap.FORM_ADDRESS_CHANGED, { address: this._address.value })
     })
     this._submitButton.addEventListener('click', (event) => {
       event.preventDefault()
@@ -51,8 +44,9 @@ export class FormOrderView extends FormView {
 
   // -----------------------------------
 
-  togglePaymentButtonStatus(button: HTMLButtonElement, status: boolean): void {
-    button.classList.toggle('button_alt-active', status)
+  togglePaymentButtonStatus(status: TPayment): void {
+    this._onlinePayButton.classList.toggle('button_alt-active', status === 'online')
+    this._cashPayButton.classList.toggle('button_alt-active', status === 'cash')
   }
 
   checkIsFormValid(errors: IValidationErrors): boolean {
