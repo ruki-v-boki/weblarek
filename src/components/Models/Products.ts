@@ -1,6 +1,6 @@
-import { IEvents } from "../base/Events";
-import { IProduct } from "../../types"
 import { eventsMap } from "../../utils/constants";
+import { IEvents } from "../base/Events";
+import { IProduct } from "../../types";
 
 
 export class Products {
@@ -45,6 +45,5 @@ export class Products {
 
   clearSelectedProduct(): void {
     this._selectedProduct = null
-    this._events.emit(eventsMap.SELECTED_PRODUCT_CLEAR)
   }
 }

@@ -136,3 +136,14 @@ export function createElement<
     }
     return element;
 }
+
+/**
+ * Воспроизводит аудио
+ */
+export function playSound(audio: HTMLAudioElement): void {
+  if (audio) {
+    audio.currentTime = 0
+    audio.play()
+    .catch((e: Error) => console.log('Неудалось воспроизвести звук', e))
+  }
+}

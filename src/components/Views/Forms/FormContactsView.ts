@@ -1,8 +1,8 @@
-import { IEvents } from "../../base/Events";
-import { FormView } from "./FormView";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
 import { IValidationErrors } from "../../../types";
+import { IEvents } from "../../base/Events";
+import { FormView } from "./FormView";
 
 
 export class FormContactsView extends FormView {
@@ -30,6 +30,8 @@ export class FormContactsView extends FormView {
       this._events.emit(eventsMap.FORM_INPUT_FOCUS)
     })
   }
+
+  // -----------------------------------
 
   checkIsFormValid(errors: IValidationErrors): boolean {
     this.clearError()

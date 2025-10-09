@@ -1,6 +1,6 @@
-import { IEvents } from "../base/Events";
-import { eventsMap } from "../../utils/constants";
 import { IBuyer, TPayment, IValidationErrors } from "../../types";
+import { eventsMap } from "../../utils/constants";
+import { IEvents } from "../base/Events";
 
 
 export class Buyer {
@@ -27,6 +27,8 @@ export class Buyer {
     this._events.emit(eventsMap.BUYER_CHANGE)
   }
 
+  // -----------------------------------
+
   getBuyerData(): IBuyer {
     return {
       address: this._address,
@@ -42,8 +44,8 @@ export class Buyer {
     let errors: IValidationErrors = {}
 
     if (!this._payment) { errors.payment = 'Выберите способ оплаты' }
-    if (!this._email) { errors.email = 'Укажите email' }
-    if (!this._phone) { errors.phone = 'Укажите телефон' }
+    if (!this._email) { errors.email = 'Необходимо указать email' }
+    if (!this._phone) { errors.phone = 'Необходимо указать телефон' }
     if (!this._address) { errors.address = 'Необходимо указать адрес' }
     return errors
   }
@@ -53,7 +55,5 @@ export class Buyer {
     this._phone = '',
     this._email = '',
     this._payment = ''
-
-    this._events.emit(eventsMap.BUYER_CLEAR)
   }
 }

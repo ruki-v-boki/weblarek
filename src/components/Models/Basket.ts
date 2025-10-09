@@ -1,6 +1,6 @@
+import { eventsMap } from "../../utils/constants"
 import { IEvents } from "../base/Events"
 import { IProduct } from "../../types"
-import { eventsMap } from "../../utils/constants"
 
 
 export class Basket {
@@ -29,17 +29,17 @@ export class Basket {
 
   // -----------------------------------
 
-  add(product: IProduct): void {
+  addProduct(product: IProduct): void {
     this._purchases.add(product)
     this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
-      quantity: this.getQuantity(),
+      quantity: this.getQuantity()
     })
   }
 
-  remove(product: IProduct): void {
+  removeProduct(product: IProduct): void {
     this._purchases.delete(product)
     this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
-      quantity: this.getQuantity(),
+      quantity: this.getQuantity()
     })
   }
 
@@ -52,6 +52,5 @@ export class Basket {
 
   clear(): void {
     this._purchases.clear()
-    this._events.emit(eventsMap.BASKET_CLEAR)
   }
 }

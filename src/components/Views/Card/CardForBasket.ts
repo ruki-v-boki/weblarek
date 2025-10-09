@@ -1,7 +1,7 @@
-import { IEvents } from "../../base/Events";
-import { CardView } from "./CardView";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
+import { IEvents } from "../../base/Events";
+import { CardView } from "./CardView";
 
 
 export class CardForBasket extends CardView {

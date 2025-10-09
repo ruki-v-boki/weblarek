@@ -1,8 +1,8 @@
+import { categoryMap, CDN_URL } from "../../../utils/constants";
+import { ensureElement } from "../../../utils/utils";
+import { Component } from "../../base/Component";
 import { IEvents } from "../../base/Events";
 import { IProduct } from "../../../types";
-import { Component } from "../../base/Component";
-import { ensureElement } from "../../../utils/utils";
-import { categoryMap, CDN_URL } from "../../../utils/constants";
 
 
 export abstract class CardView extends Component<IProduct> {
@@ -37,7 +37,7 @@ export abstract class CardView extends Component<IProduct> {
 
   set image(src: string){
     this._image 
-    ? this.setImage(this._image, CDN_URL + `${src}`, this._title.textContent)
+    ? this.setImage(this._image,CDN_URL + `${src}`, this._title.textContent)
     : ''
   }
 

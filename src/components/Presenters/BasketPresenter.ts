@@ -1,10 +1,10 @@
-import { basketTemplate } from "../../main"
-import { IBasketViewData, IBasketViewPresenter, IProduct } from "../../types"
-import { cloneTemplate } from "../../utils/utils"
-import { IEvents } from "../base/Events"
-import { Basket } from "../Models/Basket"
-import { BasketView } from "./BasketView"
-import { CardForBasket } from "./Card/CardForBasket"
+import { IBasketViewData, IBasketViewPresenter, IProduct } from "../../types";
+import { CardForBasket } from "../Views/Card/CardForBasket";
+import { cloneTemplate } from "../../utils/utils";
+import { BasketView } from "../Views/BasketView";
+import { basketTemplate } from "../../main";
+import { Basket } from "../Models/Basket";
+import { IEvents } from "../base/Events";
 
 
 export class BasketViewPresenter implements IBasketViewPresenter {
@@ -28,8 +28,8 @@ export class BasketViewPresenter implements IBasketViewPresenter {
     }
   }
 
-  renderCards(purchases: IProduct[]): HTMLElement[] {
-    return purchases.map((product: IProduct, index: number) => {
+  renderCards(items: IProduct[]): HTMLElement[] {
+    return items.map((product: IProduct, index: number) => {
       const cardForBasketView = new CardForBasket(
         cloneTemplate(this._cardTemplate), this._events)
       cardForBasketView.index = index + 1

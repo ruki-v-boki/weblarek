@@ -21,7 +21,6 @@ export const eventsMap = {
   // Products events
   PRODUCTS_RECEIVED: 'products:received',
   SELECTED_PRODUCT_SET: 'selected:product:set',
-  // SELECTED_PRODUCT_CLEAR: 'selected:product:clear',//??
   PRODUCT_SELECT: 'product:select',
   PRODUCT_SUBMIT: 'product:submit',
   PRODUCT_DELETE: 'product:delete',
@@ -30,7 +29,6 @@ export const eventsMap = {
   BASKET_OPEN: 'basket:open',
   BASKET_COUNT_CHANGE: 'basket:change',
   BASKET_PLACE_ORDER: 'basket:place:order',
-  // BASKET_CLEAR: 'basket:clear', //??
 
   // OrderForm events
   FORM_PAYMENT_CHANGED: 'payment:changed',
@@ -45,8 +43,6 @@ export const eventsMap = {
 
   //Buyer events
   BUYER_CHANGE: 'buyer:change',
-  // BUYER_CLEAR: 'buyer:clear',//??
-  // BUYER_VALIDATE: 'buyer:validate',//?
 
   //Success events
   SUCCESS_CONFIRM: 'success:confirm',

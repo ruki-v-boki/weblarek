@@ -15,6 +15,3 @@ html, body.page {
 		position: fixed;
 	}
 }
- .page:has(.modal_active) {
-	overflow: hidden;
- }

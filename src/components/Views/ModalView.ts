@@ -1,8 +1,8 @@
-import { IEvents } from "../base/Events";
+import { ensureElement } from "../../utils/utils";
 import { eventsMap } from "../../utils/constants";
 import { Component } from "../base/Component";
+import { IEvents } from "../base/Events";
 import { IModalData } from "../../types";
-import { ensureElement } from "../../utils/utils";
 
 
 export class ModalView extends Component<IModalData> {

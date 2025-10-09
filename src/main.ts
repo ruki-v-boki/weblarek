@@ -1,12 +1,12 @@
 import './scss/styles.scss';
 import { FormContactsView } from './components/Views/Forms/FormContactsView';
-import { BasketViewPresenter } from './components/Views/BasketPresenter';
+import { BasketViewPresenter } from './components/Presenters/BasketPresenter';
+import { cloneTemplate, ensureElement, playSound } from './utils/utils';
 import { FormOrderView } from './components/Views/Forms/FormOrdeViewr';
 import { CardForCatalog } from './components/Views/Card/CardForCtalog';
 import { CardForPreview } from './components/Views/Card/CardPreview';
 import { SuccessView } from './components/Views/SuccessView';
 import { FormView } from './components/Views/Forms/FormView';
-import { cloneTemplate, ensureElement } from './utils/utils';
 import { GalleryView } from './components/Views/GalleryView';
 import { HeaderView } from './components/Views/HeaderView';
 import { ModalView } from './components/Views/ModalView';
@@ -17,6 +17,7 @@ import { eventsMap, API_URL } from './utils/constants';
 import { TPayment, IProduct, TOrder } from './types';
 import { Basket } from './components/Models/Basket';
 import { Buyer } from './components/Models/Buyer';
+
 
 // ------------- Sounds -------------
 
@@ -36,9 +37,9 @@ const soundSuccess = ensureElement<HTMLAudioElement>("#soundSuccess")
 // Cards
 const cardForCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog")
 const cardForPreviewTemplate = ensureElement<HTMLTemplateElement>("#card-preview")
-export const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket") // экспорт для презентора корзины
+export const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket") // экспорт для презентера корзины
 // Basket
-export const basketTemplate = ensureElement<HTMLTemplateElement>("#basket") // экспорт для презентора корзины
+export const basketTemplate = ensureElement<HTMLTemplateElement>("#basket") // экспорт для презентера корзины
 // Forms
 const formOrderTemplate = ensureElement<HTMLTemplateElement>("#order")
 const formContactsTemplate = ensureElement<HTMLTemplateElement>("#contacts")
@@ -55,32 +56,29 @@ const modalElement = ensureElement<HTMLElement>(".modal")
 
 // Event Broker
 export const events = new EventEmitter()
-
 // Api
 const baseApi = new Api(API_URL)
 const apiClient = new ApiClient(baseApi)
-
 // Models
 const productsModel = new Products(events)
 const basketModel = new Basket(events)
 const buyerModel = new Buyer(events)
-
 // Views
 const headerView = new HeaderView(headerElement, events)
 const modalView = new ModalView(modalElement, events)
 const galleryView = new GalleryView(galleryElement)
 const successView = new SuccessView(cloneTemplate(successTemplate), events)
-
 // Presenter
 const basketViewPresenter = new BasketViewPresenter(basketModel, cardForBasketTemplate, events)
 
-// ----------------------------------------
 
+// ------------ API ------------
 
 // Получаем от сервера товары и записываем их в модель
 apiClient.getAllProducts().then(data => {
   productsModel.setProducts(data)
 })
+.catch(error => console.error('Ошибка загрузки товаров:', error))
 
 
 //-------------------------- CARDS ---------------------------------
@@ -117,63 +115,53 @@ events.on(eventsMap.SELECTED_PRODUCT_SET, (product: IProduct) => {
 })
 
 
-// СОБЫТИЕ 4) Закрываем модальное окно
-events.on(eventsMap.MODAL_CLOSE, () => {
-  modalView.close()
-  productsModel.clearSelectedProduct()
-  buyerModel.clear()
-  playSound(soundClose)
-})
-
-
-// СОБЫТИЕ 5) Добавляем/удаляем товар в корзину
+// СОБЫТИЕ 4) Добавляем/удаляем товар в корзину из карточки
 events.on(eventsMap.PRODUCT_SUBMIT, (data: { id: string }) => {
   const product = productsModel.getProductById(data.id)
   const productInBasket = basketModel.isInBasket(data.id)
 
   if (product && !productInBasket) {
-      basketModel.add(product)
+      basketModel.addProduct(product)
       playSound(soundBasketAdd)
       modalView.close()
   } else if (product && productInBasket) {
-      basketModel.remove(product)
+      basketModel.removeProduct(product)
       playSound(soundBasketRemove)
       modalView.close()
   }
 })
 
 
-// СОБЫТИЕ 6) Меняем счетчик товаров корзины в хедере
+//-------------------------- BASKET ---------------------------------
+
+// СОБЫТИЕ 5) Меняем счетчик товаров корзины в хедере
 events.on(eventsMap.BASKET_COUNT_CHANGE, (data: { quantity: number }) => {
   headerView.counter = data.quantity
 })
 
 
-// СОБЫТИЕ 7) Клик на кнопку корзины в хедере
+// СОБЫТИЕ 6) Клик на кнопку корзины в хедере
 events.on(eventsMap.BASKET_OPEN, () => {
-  const basketView = basketViewPresenter.render() // --------------- Новый рендер
+  const basketView = basketViewPresenter.render()
   modalView.open(basketView)
   playSound(soundClick)
 })
 
 
-// СОБЫТИЕ 8) Удалить товар из открытой корзины
+// СОБЫТИЕ 7) Удалить товар из открытой корзины
 events.on(eventsMap.PRODUCT_DELETE, (data: { id: string }) => {
   const product = productsModel.getProductById(data.id)
-  basketModel.remove(product!)
+  basketModel.removeProduct(product!)
 
   if (modalView.isOpen()) {
-    const basketContent = basketViewPresenter.render() // ---------- Новый рендер
+    const basketContent = basketViewPresenter.render()
     modalView.content = basketContent
   }
   playSound(soundBasketRemove)
 })
 
 
-//-------------------------- FORMS ---------------------------------
-
-
-// СОБЫТИЕ 9) Клик по кнопке "Оформить" в корзине
+// СОБЫТИЕ 8) Клик по кнопке "Оформить" в корзине
 events.on(eventsMap.BASKET_PLACE_ORDER, () => {
   const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events)
   currentForm.set(formOrderView)
@@ -183,7 +171,26 @@ events.on(eventsMap.BASKET_PLACE_ORDER, () => {
 })
 
 
-// СОБЫТИЕ 10) Клик по кнопкам выбора оплаты
+//-------------------------- FORMS ---------------------------------
+
+// Позволяет обращаться к нужной форме
+const currentForm = {
+  current: null as FormView | null,
+
+  set(form: FormView): void {
+    this.current = form
+  },
+  get(): FormView | null {
+    return this.current
+  },
+  clear(): void {
+    this.current = null
+  }
+}
+
+// ------------ FORM ORDER ------------
+
+// СОБЫТИЕ 9) Клик по кнопкам выбора оплаты
 events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: {
   payment: string,
   button: HTMLButtonElement,
@@ -208,7 +215,7 @@ events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: {
 })
 
 
-// Событие 11) Ввод адреса в инпут
+// Событие 10) Ввод адреса в инпут
 events.on(eventsMap.FORM_ADDRESS_CHANGED, (data: {
   address: string,
   form: FormOrderView
@@ -222,7 +229,41 @@ events.on(eventsMap.FORM_ADDRESS_CHANGED, (data: {
 })
 
 
-// Событие 12) Данные в модели изменились
+// СОБЫТИЕ 11) Клик по кнопке сабмита формы заказа
+events.on(eventsMap.FORM_ORDER_SUBMIT, () => {
+  const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events)
+  currentForm.set(formContactsView)
+
+  modalView.content = formContactsView.render()
+  playSound(soundFormSubmit)
+})
+
+
+// ------------ FORM CONTACTS ------------
+
+// СОБЫТИЕ 12) Ввод email в инпут
+events.on(eventsMap.FORM_EMAIL_CHANGED, (data: { email: string }) => {
+  const currentData = buyerModel.getBuyerData()
+  buyerModel.setBuyerData({
+    ...currentData,
+    email: data.email
+  })
+  playSound(soundKeyboard)
+})
+
+
+// СОБЫТИЕ 13) Ввод телефона в инпут
+events.on(eventsMap.FORM_PHONE_CHANGED, (data: { phone: string }) => {
+  const currentData = buyerModel.getBuyerData()
+  buyerModel.setBuyerData({
+    ...currentData,
+    phone: data.phone
+  })
+  playSound(soundKeyboard)
+})
+
+
+// Событие 14) Данные в модели изменились
 events.on(eventsMap.BUYER_CHANGE, () => {
   const errors = buyerModel.validate()
   const form = currentForm.get()
@@ -235,39 +276,7 @@ events.on(eventsMap.BUYER_CHANGE, () => {
 })
 
 
-// СОБЫТИЕ 13) Клик по кнопке сабмита формы заказа
-events.on(eventsMap.FORM_ORDER_SUBMIT, () => {
-  const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events)
-  currentForm.set(formContactsView)
-
-  modalView.content = formContactsView.render()
-  playSound(soundFormSubmit)
-})
-
-
-// СОБЫТИЕ 14) Ввод email в инпут
-events.on(eventsMap.FORM_EMAIL_CHANGED, (data: { email: string }) => {
-  const currentData = buyerModel.getBuyerData()
-  buyerModel.setBuyerData({
-    ...currentData,
-    email: data.email
-  })
-  playSound(soundKeyboard)
-})
-
-
-// СОБЫТИЕ 15) Ввод телефона в инпут
-events.on(eventsMap.FORM_PHONE_CHANGED, (data: { phone: string }) => {
-  const currentData = buyerModel.getBuyerData()
-  buyerModel.setBuyerData({
-    ...currentData,
-    phone: data.phone
-  })
-  playSound(soundKeyboard)
-})
-
-
-// СОБЫТИЕ 16) Фокус на инпуте
+// СОБЫТИЕ 15) Фокус на инпуте
 events.on(eventsMap.FORM_INPUT_FOCUS, () => {
   playSound(soundClick)
 })
@@ -276,7 +285,7 @@ events.on(eventsMap.FORM_INPUT_FOCUS, () => {
 //-------------------------- PLACING ORDER ---------------------------------
 
 
-// СОБЫТИЕ 17) Клик по кнопке сабмита формы контактов
+// СОБЫТИЕ 16) Клик по кнопке сабмита формы контактов
 events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
   const buyerData = buyerModel.getBuyerData()
   const purchases = basketModel.getPurchases()
@@ -295,47 +304,34 @@ events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
     apiClient.placeOrder(orderData).then(response => {
       if (response) {
         basketModel.clear()
-        buyerModel.clear()
+        // buyerModel.clear() // Данные пользователя и так очищаются при каждом закрытии модального окна
         headerView.counter = basketModel.getQuantity()
         successView.totalPrice = response.total
         modalView.content = successView.render()
         playSound(soundSuccess)
       }
     })
-      .catch(error =>
-        console.log('Не удалось разместить заказ на сервере: ', error))
+      .catch(error => console.error('Не удалось разместить заказ: ', error))
   }, 1000)
 })
 
 
-// СОБЫТИЕ 18) Клик по кнопке "За новыми покупками"
+//-------------------------- SUCCESS ---------------------------------
+
+// СОБЫТИЕ 17) Клик по кнопке "За новыми покупками"
 events.on(eventsMap.SUCCESS_CONFIRM, () => {
   modalView.close()
+  currentForm.clear()
   playSound(soundFormSubmit)
 })
 
 
-//------------------------------------------------------------------
+//-------------------------- MODAL ---------------------------------
 
-const currentForm = {
-  current: null as FormView | null,
-
-  set(form: FormView): void {
-    this.current = form
-  },
-  get(): FormView | null {
-    return this.current
-  },
-  clear(): void {
-    this.current = null
-  }
-}
-
-//------------------------------------------------------------------
-
-function playSound(audio: HTMLAudioElement): void {
-  if(audio){
-    audio.currentTime = 0
-    audio.play().catch((e: Error) => console.log('Неудалось воспроизвести', e))
-  }
-}
+// СОБЫТИЕ 18) Закрываем модальное окно
+events.on(eventsMap.MODAL_CLOSE, () => {
+  productsModel.clearSelectedProduct()
+  buyerModel.clear()
+  modalView.close()
+  playSound(soundClose)
+})

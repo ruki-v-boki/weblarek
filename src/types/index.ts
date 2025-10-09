@@ -1,6 +1,5 @@
 
 // ------------ INTERFACE ------------
-// ------ Api ------
 export interface IApi {
   get<T extends object>(uri: string): Promise<T>;
   post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
@@ -11,8 +10,6 @@ export interface IApiResponse<T> {
   items: T[];
 }
 
-
-// ------ Model ------
 export interface IProduct {
   id: string;
   title: string;
@@ -36,17 +33,8 @@ export interface IValidationErrors {
   address?: string;
 }
 
-
-// ------ View ------
 export interface IHeaderData {
   counter: number
-}
-
-export interface IBasketViewData {
-  totalPrice: number
-  purchases: IProduct[]
-  quantity: number
-  hasProducts: boolean
 }
 
 export interface IGalleryData {
@@ -65,11 +53,18 @@ export interface IFormErrorData {
   error: string
 }
 
-// ----------------------------------
+export interface IBasketViewData {
+  totalPrice: number
+  purchases: IProduct[]
+  quantity: number
+  hasProducts: boolean
+}
+
 export interface IBasketViewPresenter {
+  getViewData(): IBasketViewData
+  renderCards(items: IProduct[]): HTMLElement[]
   render(): HTMLElement
 }
-// ----------------------------------
 
 
 // ------------ TYPE ------------

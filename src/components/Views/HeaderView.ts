@@ -1,8 +1,8 @@
-import { IEvents } from "../base/Events";
+import { ensureElement } from "../../utils/utils";
 import { eventsMap } from "../../utils/constants";
 import { Component } from "../base/Component";
 import { IHeaderData } from "../../types";
-import { ensureElement } from "../../utils/utils";
+import { IEvents } from "../base/Events";
 
 
 export class HeaderView extends Component<IHeaderData> {

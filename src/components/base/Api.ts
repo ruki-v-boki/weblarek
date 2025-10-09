@@ -42,15 +42,15 @@ export class Api {
 
 export class ApiClient {
   constructor(
-    protected api: IApi
+    protected _api: IApi
   ){}
 
   getAllProducts(): Promise<IProduct[]> {
-    return this.api.get<TProductsResponse>('/product/')
+    return this._api.get<TProductsResponse>('/product/')
           .then(response => response.items)
   }
 
   placeOrder(orderData: TOrder): Promise<TOrderResponse> {
-    return this.api.post<TOrderResponse>('/order/', orderData)
+    return this._api.post<TOrderResponse>('/order/', orderData)
   }
 }

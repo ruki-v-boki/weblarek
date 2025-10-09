@@ -1,6 +1,6 @@
+import { eventsMap } from "../../../utils/constants";
 import { IEvents } from "../../base/Events";
 import { CardView } from "./CardView";
-import { eventsMap } from "../../../utils/constants";
 
 
 export class CardForCatalog extends CardView {

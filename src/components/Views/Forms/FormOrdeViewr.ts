@@ -1,8 +1,8 @@
-import { IEvents } from "../../base/Events";
-import { FormView } from "./FormView";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
 import { IValidationErrors } from "../../../types";
+import { IEvents } from "../../base/Events";
+import { FormView } from "./FormView";
 
 
 export class FormOrderView extends FormView {
