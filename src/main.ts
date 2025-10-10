@@ -6,7 +6,6 @@ import { FormOrderView } from './components/Views/Forms/FormOrdeViewr';
 import { CardForCatalog } from './components/Views/Card/CardForCtalog';
 import { CardForPreview } from './components/Views/Card/CardPreview';
 import { SuccessView } from './components/Views/SuccessView';
-import { FormView } from './components/Views/Forms/FormView';
 import { GalleryView } from './components/Views/GalleryView';
 import { HeaderView } from './components/Views/HeaderView';
 import { ModalView } from './components/Views/ModalView';
@@ -67,6 +66,8 @@ const buyerModel = new Buyer(events)
 const headerView = new HeaderView(headerElement, events)
 const modalView = new ModalView(modalElement, events)
 const galleryView = new GalleryView(galleryElement)
+const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events)
+const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events)
 const successView = new SuccessView(cloneTemplate(successTemplate), events)
 // Presenter
 const basketViewPresenter = new BasketViewPresenter(basketModel, cardForBasketTemplate, events)
@@ -164,9 +165,6 @@ events.on(eventsMap.PRODUCT_DELETE, (data: { id: string }) => {
 
 // СОБЫТИЕ 8) Клик по кнопке "Оформить" в корзине
 events.on(eventsMap.BASKET_PLACE_ORDER, () => {
-  const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events)
-  currentForm.set(formOrderView)
-
   modalView.content = formOrderView.render()
   playSound(soundFormSubmit)
 })
@@ -174,33 +172,9 @@ events.on(eventsMap.BASKET_PLACE_ORDER, () => {
 
 //-------------------------- FORMS ---------------------------------
 
-// Позволяет обращаться к нужной форме
-const currentForm = {
-  current: null as FormView | null,
-
-  set(form: FormView): void {
-    this.current = form
-  },
-  get(): FormView | null {
-    return this.current
-  },
-  clear(): void {
-    this.current = null
-  }
-}
-
-// ------------ FORM ORDER ------------
-
 // СОБЫТИЕ 9) Клик по кнопкам выбора оплаты
-events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: {
-  payment: string,
-  soundId: string
-}) => {
-  const currentData = buyerModel.getBuyerData()
-  buyerModel.setBuyerData({
-    ...currentData,
-    payment: data.payment as TPayment
-  })
+events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: { payment: TPayment, soundId: string }) => {
+  buyerModel.payment = data.payment
 
   if (data.soundId === 'paymentOnline') {
     playSound(soundPaymentOnline)
@@ -212,61 +186,46 @@ events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: {
 
 // Событие 10) Ввод адреса в инпут
 events.on(eventsMap.FORM_ADDRESS_CHANGED, (data: { address: string }) => {
-  const currentData = buyerModel.getBuyerData()
-  buyerModel.setBuyerData({
-    ...currentData,
-    address: data.address
-  })
+  buyerModel.address = data.address
   playSound(soundKeyboard)
 })
 
 
 // СОБЫТИЕ 11) Клик по кнопке сабмита формы заказа
 events.on(eventsMap.FORM_ORDER_SUBMIT, () => {
-  const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events)
-  currentForm.set(formContactsView)
-
   modalView.content = formContactsView.render()
   playSound(soundFormSubmit)
 })
 
 
-// ------------ FORM CONTACTS ------------
-
 // СОБЫТИЕ 12) Ввод email в инпут
 events.on(eventsMap.FORM_EMAIL_CHANGED, (data: { email: string }) => {
-  const currentData = buyerModel.getBuyerData()
-  buyerModel.setBuyerData({
-    ...currentData,
-    email: data.email
-  })
+  buyerModel.email = data.email
   playSound(soundKeyboard)
 })
 
 
 // СОБЫТИЕ 13) Ввод телефона в инпут
 events.on(eventsMap.FORM_PHONE_CHANGED, (data: { phone: string }) => {
-  const currentData = buyerModel.getBuyerData()
-  buyerModel.setBuyerData({
-    ...currentData,
-    phone: data.phone
-  })
+  buyerModel.phone = data.phone
   playSound(soundKeyboard)
 })
 
 
 // Событие 14) Данные покупателя в модели изменились
-events.on(eventsMap.BUYER_CHANGE, () => {
-  const form = currentForm.get()
-  if (!form) return
-
+events.on(eventsMap.BUYER_CHANGE, (data: { field: string }) => {
   const errors = buyerModel.validate()
-  const isValid = form.checkIsFormValid(errors)
-  form.toggleSubmitButton(isValid)
-  form.toggleErrorClass(!isValid)
 
-  if (form instanceof FormOrderView) {
-    form.togglePaymentButtonStatus(buyerModel.getBuyerData().payment)
+  if (data.field === 'payment' || data.field === 'address') {
+    const isValid = formOrderView.checkIsFormValid(errors)
+    formOrderView.toggleSubmitButton(isValid)
+    formOrderView.toggleErrorClass(!isValid)
+    formOrderView.togglePaymentButtonStatus(buyerModel.getAllBuyerData().payment)
+
+  } else if (data.field === 'email' || data.field === 'phone') {
+    const isValid = formContactsView.checkIsFormValid(errors)
+    formContactsView.toggleSubmitButton(isValid)
+    formContactsView.toggleErrorClass(!isValid)
   }
 })
 
@@ -282,7 +241,7 @@ events.on(eventsMap.FORM_INPUT_FOCUS, () => {
 
 // СОБЫТИЕ 16) Клик по кнопке сабмита формы контактов
 events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
-  const buyerData = buyerModel.getBuyerData()
+  const buyerData = buyerModel.getAllBuyerData()
   const purchases = basketModel.getPurchases()
 
   const orderData: TOrder = {
@@ -299,10 +258,12 @@ events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
     apiClient.placeOrder(orderData).then(response => {
       if (response) {
         basketModel.clear()
-        // buyerModel.clear() // Данные пользователя и так очищаются при каждом закрытии модального окна
+        buyerModel.clear()
         headerView.counter = basketModel.getQuantity()
-        successView.totalPrice = response.total
         modalView.content = successView.render()
+        formOrderView.resetFormState()
+        formContactsView.resetFormState()
+        successView.totalPrice = response.total
         playSound(soundSuccess)
       }
     })
@@ -316,7 +277,6 @@ events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
 // СОБЫТИЕ 17) Клик по кнопке "За новыми покупками"
 events.on(eventsMap.SUCCESS_CONFIRM, () => {
   modalView.close()
-  currentForm.clear()
   playSound(soundFormSubmit)
 })
 
@@ -326,7 +286,6 @@ events.on(eventsMap.SUCCESS_CONFIRM, () => {
 // СОБЫТИЕ 18) Закрываем модальное окно
 events.on(eventsMap.MODAL_CLOSE, () => {
   productsModel.clearSelectedProduct()
-  buyerModel.clear()
   modalView.close()
   playSound(soundClose)
 })

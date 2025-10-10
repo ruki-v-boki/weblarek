@@ -10,6 +10,8 @@ export interface IApiResponse<T> {
   items: T[];
 }
 
+
+// ------------ Model ------------
 export interface IProduct {
   id: string;
   title: string;
@@ -33,6 +35,8 @@ export interface IValidationErrors {
   address?: string;
 }
 
+
+// ------------ View ------------
 export interface IHeaderData {
   counter: number
 }

@@ -18,13 +18,15 @@ export class FormContactsView extends FormView {
     this._email.addEventListener('input', () => {
       this._events.emit(eventsMap.FORM_EMAIL_CHANGED, { email: this._email.value })
     })
+
     this._phone.addEventListener('input', () => {
       this._events.emit(eventsMap.FORM_PHONE_CHANGED, { phone: this._phone.value })
     })
-    this._submitButton.addEventListener('click', (event) => {
-      event.preventDefault()
+
+    this._submitButton.addEventListener('click', (event) => { event.preventDefault()
       this._events.emit(eventsMap.FORM_CONTACTS_SUBMIT)
     })
+
     this.container.addEventListener('focusin', (event) => {
       if (event.target instanceof HTMLInputElement)
       this._events.emit(eventsMap.FORM_INPUT_FOCUS)
@@ -33,9 +35,21 @@ export class FormContactsView extends FormView {
 
   // -----------------------------------
 
+  // fromAbstract
   checkIsFormValid(errors: IValidationErrors): boolean {
     this.clearError()
     this.error = errors.email || errors.phone || ''
     return !errors.email && !errors.phone
+  }
+
+  // childMethod
+  resetFormState(): void {
+    super.resetFormState()
+    this.clear()
+  }
+
+  clear(): void {
+    this._phone.value = ''
+    this._email.value = ''
   }
 }

@@ -18,18 +18,29 @@ export class Buyer {
 
   // -----------------------------------
 
-  setBuyerData(data: IBuyer) {
-    this._address = data.address
-    this._phone = data.phone.trim()
-    this._email = data.email.trim()
-    this._payment = data.payment
+  set address(address: string){
+    this._address = address,
+    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'address' })
+  }
 
-    this._events.emit(eventsMap.BUYER_CHANGE, { payment: this._payment })
+  set phone(phone: string){
+    this._phone = phone.trim(),
+    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'phone' })
+  }
+
+  set email(email: string){
+    this._email = email.trim(),
+    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'email' })
+  }
+
+  set payment(payment: TPayment){
+    this._payment = payment,
+    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'payment' })
   }
 
   // -----------------------------------
 
-  getBuyerData(): IBuyer {
+  getAllBuyerData(): IBuyer {
     return {
       address: this._address,
       phone: this._phone,

@@ -22,6 +22,13 @@ export abstract class FormView extends Component<IFormErrorData> {
 
   // -----------------------------------
 
+  abstract checkIsFormValid(errors: IValidationErrors): boolean
+
+  resetFormState(): void {
+    this.clearError()
+    this._submitButton.toggleAttribute('disabled', true)
+  }
+
   toggleSubmitButton(value: boolean): void {
     this._submitButton.toggleAttribute('disabled', !value)
   }
@@ -33,6 +40,4 @@ export abstract class FormView extends Component<IFormErrorData> {
   clearError(): void {
     this._error.textContent = ''
   }
-
-  abstract checkIsFormValid(errors: IValidationErrors): boolean
 }
