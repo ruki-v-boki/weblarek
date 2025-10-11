@@ -1,11 +1,11 @@
 import './scss/styles.scss';
+import { FormContactsView } from './components/Views/Forms/Child/FormContactsView';
+import { CardForPreview } from './components/Views/Card/Child/CardForPreview';
 import { BasketViewPresenter } from './components/Presenters/BasketPresenter';
 import { eventsMap, categoryMap, API_URL, CDN_URL } from './utils/constants';
-import { FormContactsView } from './components/Views/Forms/FormContactsView';
-import { CardForPreview } from './components/Views/Card/CardForPreview';
+import { FormOrderView } from './components/Views/Forms/Child/FormOrdeViewr';
+import { CardForCatalog } from './components/Views/Card/Child/CardForCtalog';
 import { cloneTemplate, ensureElement, playSound } from './utils/utils';
-import { FormOrderView } from './components/Views/Forms/FormOrdeViewr';
-import { CardForCatalog } from './components/Views/Card/CardForCtalog';
 import { SuccessView } from './components/Views/SuccessView';
 import { GalleryView } from './components/Views/GalleryView';
 import { HeaderView } from './components/Views/HeaderView';
@@ -18,7 +18,7 @@ import { Basket } from './components/Models/Basket';
 import { Buyer } from './components/Models/Buyer';
 
 
-// ------------- Sounds -------------
+// ------------ ♫ Sounds:) ♫ -------------
 
 const soundClick = ensureElement<HTMLAudioElement>("#soundClick")
 const soundClose = ensureElement<HTMLAudioElement>("#soundClose")

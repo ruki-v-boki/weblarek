@@ -1,7 +1,7 @@
-import { CardImageCategory } from "./CardImageCategory";
-import { eventsMap } from "../../../utils/constants";
-import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../../base/Events";
+import { CardImageCategory } from "../Parent/CardImageCategory";
+import { eventsMap } from "../../../../utils/constants";
+import { ensureElement } from "../../../../utils/utils";
+import { IEvents } from "../../../base/Events";
 
 
 export class CardForPreview extends CardImageCategory {

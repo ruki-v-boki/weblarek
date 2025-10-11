@@ -1,6 +1,6 @@
-import { CardImageCategory } from "./CardImageCategory";
-import { eventsMap } from "../../../utils/constants";
-import { IEvents } from "../../base/Events";
+import { CardImageCategory } from "../Parent/CardImageCategory";
+import { eventsMap } from "../../../../utils/constants";
+import { IEvents } from "../../../base/Events";
 
 
 export class CardForCatalog extends CardImageCategory {

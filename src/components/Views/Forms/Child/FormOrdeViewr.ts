@@ -1,8 +1,8 @@
-import { IValidationErrors, TPayment } from "../../../types";
-import { eventsMap } from "../../../utils/constants";
-import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../../base/Events";
-import { FormView } from "./FormView";
+import { IValidationErrors, TPayment } from "../../../../types";
+import { eventsMap } from "../../../../utils/constants";
+import { ensureElement } from "../../../../utils/utils";
+import { IEvents } from "../../../base/Events";
+import { FormView } from "../Parent/FormView"; 
 
 
 export class FormOrderView extends FormView {

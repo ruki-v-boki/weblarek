@@ -18,6 +18,7 @@ export class ModalView extends Component<IModalData> {
     this._closeButton.addEventListener('click', () => {
       this._events.emit(eventsMap.MODAL_CLOSE)
     })
+
     this.container.addEventListener('click', event => {
       if(event.target === event.currentTarget) {
         this._events.emit(eventsMap.MODAL_CLOSE)

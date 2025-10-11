@@ -1,5 +1,5 @@
 import { IBasketViewData, IBasketViewPresenter, IProduct } from "../../types";
-import { CardForBasket } from "../Views/Card/CardForBasket";
+import { CardForBasket } from "../Views/Card/Child/CardForBasket";
 import { cloneTemplate } from "../../utils/utils";
 import { BasketView } from "../Views/BasketView";
 import { basketTemplate } from "../../main";

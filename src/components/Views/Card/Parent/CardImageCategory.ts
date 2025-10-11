@@ -1,10 +1,9 @@
-import { ensureElement } from "../../../utils/utils";
-// import { CDN_URL } from "../../../utils/constants";
-import { IEvents } from "../../base/Events";
+import { ensureElement } from "../../../../utils/utils";
+import { IEvents } from "../../../base/Events";
 import { CardView } from "./CardView";
 
 
-export class CardImageCategory extends CardView {
+export abstract class CardImageCategory extends CardView {
   protected _image: HTMLImageElement
   protected _CDN_URL: string
   protected _category: HTMLElement
