@@ -1,5 +1,5 @@
 import { ensureElement } from "../../utils/utils";
-import { eventsMap } from "../../utils/constants";
+import { AppEvents } from "../../utils/constants";
 import { Component } from "../base/Component";
 import { IHeaderData } from "../../types";
 import { IEvents } from "../base/Events";
@@ -16,7 +16,7 @@ export class HeaderView extends Component<IHeaderData> {
 
     // ------------LISTENERS------------
     this._basketButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.BASKET_OPEN)
+      this._events.emit(AppEvents.BASKET_OPEN)
     })
   }
 

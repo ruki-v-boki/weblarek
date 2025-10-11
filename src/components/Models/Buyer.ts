@@ -1,5 +1,5 @@
 import { IBuyer, TPayment, IValidationErrors } from "../../types";
-import { eventsMap } from "../../utils/constants";
+import { AppEvents } from "../../utils/constants";
 import { IEvents } from "../base/Events";
 
 
@@ -20,22 +20,22 @@ export class Buyer {
 
   set address(address: string){
     this._address = address,
-    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'address' })
+    this._events.emit(AppEvents.BUYER_CHANGE, { field: 'address' })
   }
 
   set phone(phone: string){
     this._phone = phone.trim(),
-    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'phone' })
+    this._events.emit(AppEvents.BUYER_CHANGE, { field: 'phone' })
   }
 
   set email(email: string){
     this._email = email.trim(),
-    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'email' })
+    this._events.emit(AppEvents.BUYER_CHANGE, { field: 'email' })
   }
 
   set payment(payment: TPayment){
     this._payment = payment,
-    this._events.emit(eventsMap.BUYER_CHANGE, { field: 'payment' })
+    this._events.emit(AppEvents.BUYER_CHANGE, { field: 'payment' })
   }
 
   // -----------------------------------

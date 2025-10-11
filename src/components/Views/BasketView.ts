@@ -1,5 +1,5 @@
 import { ensureElement } from "../../utils/utils";
-import { eventsMap } from "../../utils/constants";
+import { AppEvents } from "../../utils/constants";
 import { Component } from "../base/Component";
 import { IBasketViewData } from "../../types";
 import { IEvents } from "../base/Events";
@@ -20,13 +20,13 @@ export class BasketView extends Component<IBasketViewData> {
 
     // ------------LISTENERS------------
     this._submitButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.BASKET_PLACE_ORDER)
+      this._events.emit(AppEvents.BASKET_PLACE_ORDER)
     })
   }
 
   // -----------------------------------
 
-  set basketList(purchases: HTMLElement[]){ //-----------------------
+  set basketList(purchases: HTMLElement[]){
     this._basketList.replaceChildren(...purchases)
   }
 

@@ -1,5 +1,5 @@
 import { CardImageCategory } from "../Parent/CardImageCategory";
-import { eventsMap } from "../../../../utils/constants";
+import { AppEvents } from "../../../../utils/constants";
 import { IEvents } from "../../../base/Events";
 
 
@@ -14,7 +14,7 @@ export class CardForCatalog extends CardImageCategory {
 
     // ------------LISTENERS------------
     this.container.addEventListener('click', () => {
-      this._events.emit(eventsMap.PRODUCT_SELECT, { id: this._id })
+      this._events.emit(AppEvents.PRODUCT_SELECT, { id: this._id })
     })
   }
 }

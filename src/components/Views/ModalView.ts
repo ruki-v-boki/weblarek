@@ -1,5 +1,5 @@
 import { ensureElement } from "../../utils/utils";
-import { eventsMap } from "../../utils/constants";
+import { AppEvents } from "../../utils/constants";
 import { Component } from "../base/Component";
 import { IEvents } from "../base/Events";
 import { IModalData } from "../../types";
@@ -18,12 +18,12 @@ export class ModalView extends Component<IModalData> {
 
     // ------------LISTENERS------------
     this._closeButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.MODAL_CLOSE)
+      this._events.emit(AppEvents.MODAL_CLOSE)
     })
 
     this.container.addEventListener('click', event => {
       if(event.target === event.currentTarget) {
-        this._events.emit(eventsMap.MODAL_CLOSE)
+        this._events.emit(AppEvents.MODAL_CLOSE)
       }
     })
   }

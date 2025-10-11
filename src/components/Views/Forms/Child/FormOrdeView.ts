@@ -1,5 +1,5 @@
 import { IValidationErrors, TPayment } from "../../../../types";
-import { eventsMap } from "../../../../utils/constants";
+import { AppEvents } from "../../../../utils/constants";
 import { ensureElement } from "../../../../utils/utils";
 import { IEvents } from "../../../base/Events";
 import { FormView } from "../Parent/FormView"; 
@@ -18,24 +18,24 @@ export class FormOrderView extends FormView {
 
     // ------------ LISTENERS ------------
     this._onlinePayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, { payment: 'online' })
+      this._events.emit(AppEvents.FORM_PAYMENT_CHANGED, { payment: 'online' })
     })
 
     this._cashPayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, { payment: 'cash' })
+      this._events.emit(AppEvents.FORM_PAYMENT_CHANGED, { payment: 'cash' })
     })
 
     this._address.addEventListener('input', () => {
-      this._events.emit(eventsMap.FORM_ADDRESS_CHANGED, { address: this._address.value })
+      this._events.emit(AppEvents.FORM_ADDRESS_CHANGED, { address: this._address.value })
     })
 
     this._submitButton.addEventListener('click', (event) => { event.preventDefault()
-      this._events.emit(eventsMap.FORM_ORDER_SUBMIT)
+      this._events.emit(AppEvents.FORM_ORDER_SUBMIT)
     })
 
     this.container.addEventListener('focusin', (event) => {
       if (event.target instanceof HTMLInputElement)
-      this._events.emit(eventsMap.FORM_INPUT_FOCUS)
+      this._events.emit(AppEvents.FORM_INPUT_FOCUS)
     })
   }
 

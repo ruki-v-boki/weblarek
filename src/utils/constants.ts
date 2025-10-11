@@ -17,38 +17,38 @@ export const categoryMap = {
   'другое': 'card__category_other',
 };
 
-export const eventsMap = {
+export enum AppEvents {
   // Products events
-  PRODUCTS_RECEIVED: 'products:received',
-  SELECTED_PRODUCT_SET: 'selected:product:set',
-  PRODUCT_SELECT: 'product:select',
-  PRODUCT_SUBMIT: 'product:submit',
-  PRODUCT_DELETE: 'product:delete',
+  PRODUCTS_RECEIVED = 'products:received',
+  SELECTED_PRODUCT_SET = 'selected:product:set',
+  PRODUCT_SELECT = 'product:select',
+  PRODUCT_SUBMIT = 'product:submit',
+  PRODUCT_DELETE = 'product:delete',
 
   //Basket events
-  BASKET_OPEN: 'basket:open',
-  BASKET_LIST_CHANGE: 'basket:list:change',
-  BASKET_PLACE_ORDER: 'basket:place:order',
+  BASKET_OPEN = 'basket:open',
+  BASKET_LIST_CHANGE = 'basket:list:change',
+  BASKET_PLACE_ORDER = 'basket:place:order',
 
   // OrderForm events
-  FORM_PAYMENT_CHANGED: 'payment:changed',
-  FORM_ADDRESS_CHANGED: 'address:changed',
-  FORM_ORDER_SUBMIT: 'order:submit',
+  FORM_PAYMENT_CHANGED = 'payment:changed',
+  FORM_ADDRESS_CHANGED = 'address:changed',
+  FORM_ORDER_SUBMIT = 'order:submit',
 
   // ContactsForm events
-  FORM_EMAIL_CHANGED: 'email:changed',
-  FORM_PHONE_CHANGED: 'phone:changed',
-  FORM_CONTACTS_SUBMIT: 'contacts:submit',
-  FORM_INPUT_FOCUS: 'form:input:focus',
+  FORM_EMAIL_CHANGED = 'email:changed',
+  FORM_PHONE_CHANGED = 'phone:changed',
+  FORM_CONTACTS_SUBMIT = 'contacts:submit',
+  FORM_INPUT_FOCUS = 'form:input:focus',
 
   //Buyer events
-  BUYER_CHANGE: 'buyer:change',
+  BUYER_CHANGE = 'buyer:change',
 
   //Success events
-  SUCCESS_CONFIRM: 'success:confirm',
+  SUCCESS_CONFIRM = 'success:confirm',
 
   //Modal events
-  MODAL_CLOSE: 'modal:close',
+  MODAL_CLOSE = 'modal:close',
 };
 
 export const settings = {

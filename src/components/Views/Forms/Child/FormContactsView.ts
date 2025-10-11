@@ -1,4 +1,4 @@
-import { eventsMap } from "../../../../utils/constants";
+import { AppEvents } from "../../../../utils/constants";
 import { ensureElement } from "../../../../utils/utils";
 import { IValidationErrors } from "../../../../types";
 import { IEvents } from "../../../base/Events";
@@ -16,20 +16,20 @@ export class FormContactsView extends FormView {
 
     // ------------LISTENERS------------
     this._email.addEventListener('input', () => {
-      this._events.emit(eventsMap.FORM_EMAIL_CHANGED, { email: this._email.value })
+      this._events.emit(AppEvents.FORM_EMAIL_CHANGED, { email: this._email.value })
     })
 
     this._phone.addEventListener('input', () => {
-      this._events.emit(eventsMap.FORM_PHONE_CHANGED, { phone: this._phone.value })
+      this._events.emit(AppEvents.FORM_PHONE_CHANGED, { phone: this._phone.value })
     })
 
     this._submitButton.addEventListener('click', (event) => { event.preventDefault()
-      this._events.emit(eventsMap.FORM_CONTACTS_SUBMIT)
+      this._events.emit(AppEvents.FORM_CONTACTS_SUBMIT)
     })
 
     this.container.addEventListener('focusin', (event) => {
       if (event.target instanceof HTMLInputElement)
-      this._events.emit(eventsMap.FORM_INPUT_FOCUS)
+      this._events.emit(AppEvents.FORM_INPUT_FOCUS)
     })
   }
 

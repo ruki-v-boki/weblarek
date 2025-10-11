@@ -1,4 +1,4 @@
-import { eventsMap } from "../../utils/constants";
+import { AppEvents } from "../../utils/constants";
 import { IEvents } from "../base/Events";
 import { IProduct } from "../../types";
 
@@ -18,12 +18,12 @@ export class Products {
 
   setProducts(products: IProduct[]): void {
     this._allProducts = products
-    this._events.emit(eventsMap.PRODUCTS_RECEIVED, products)
+    this._events.emit(AppEvents.PRODUCTS_RECEIVED, products)
   }
 
   setSelectedProduct(product: IProduct): void {
     this._selectedProduct = product
-    this._events.emit(eventsMap.SELECTED_PRODUCT_SET, product)
+    this._events.emit(AppEvents.SELECTED_PRODUCT_SET, product)
   }
 
   // -----------------------------------

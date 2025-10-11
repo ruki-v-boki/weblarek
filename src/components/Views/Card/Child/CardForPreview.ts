@@ -1,5 +1,5 @@
 import { CardImageCategory } from "../Parent/CardImageCategory";
-import { eventsMap } from "../../../../utils/constants";
+import { AppEvents } from "../../../../utils/constants";
 import { ensureElement } from "../../../../utils/utils";
 import { IEvents } from "../../../base/Events";
 
@@ -20,7 +20,7 @@ export class CardForPreview extends CardImageCategory {
 
     // ------------LISTENERS------------
     this._orderButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.PRODUCT_SUBMIT, { id: this._id })
+      this._events.emit(AppEvents.PRODUCT_SUBMIT, { id: this._id })
     })
   }
 

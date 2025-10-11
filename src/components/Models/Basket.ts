@@ -1,4 +1,4 @@
-import { eventsMap } from "../../utils/constants"
+import { AppEvents } from "../../utils/constants"
 import { IEvents } from "../base/Events"
 import { IProduct } from "../../types"
 
@@ -31,7 +31,7 @@ export class Basket {
 
   addProduct(product: IProduct): void {
     this._purchases.add(product)
-    this._events.emit(eventsMap.BASKET_LIST_CHANGE, {
+    this._events.emit(AppEvents.BASKET_LIST_CHANGE, {
       purchases: this.getPurchases(),
       totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity()
@@ -40,7 +40,7 @@ export class Basket {
 
   removeProduct(product: IProduct): void {
     this._purchases.delete(product)
-    this._events.emit(eventsMap.BASKET_LIST_CHANGE, {
+    this._events.emit(AppEvents.BASKET_LIST_CHANGE, {
       purchases: this.getPurchases(),
       totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity()
