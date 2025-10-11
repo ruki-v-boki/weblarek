@@ -30,13 +30,13 @@ export class CardForPreview extends CardImageCategory {
     this._description.textContent = value
   }
 
-  set orderButtonText(value: string){
+  set buttonText(value: string){
     this._orderButton.textContent = value
   }
 
   // -----------------------------------
 
-  toggleOrderButton(value: boolean): void {
+  toggleButtonState(value: boolean): void {
     this._orderButton.toggleAttribute('disabled', !value)
   }
 }

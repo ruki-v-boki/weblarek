@@ -27,7 +27,7 @@ export const eventsMap = {
 
   //Basket events
   BASKET_OPEN: 'basket:open',
-  BASKET_COUNT_CHANGE: 'basket:change',
+  BASKET_LIST_CHANGE: 'basket:list:change',
   BASKET_PLACE_ORDER: 'basket:place:order',
 
   // OrderForm events

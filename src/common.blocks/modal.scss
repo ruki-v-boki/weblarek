@@ -46,6 +46,22 @@
 
   &__content {
     flex-grow: 1;
+
+    &-loader {
+      display: none;
+      width: 300px;
+      height: 300px;
+      border: 5px solid #FFF;
+      border-radius: 50%;
+      border-bottom-color: transparent;
+      animation: spin 1s linear infinite;
+
+      &_active {
+        display: flex;
+        margin-inline: auto;
+        margin-block: 112px;
+      }
+    }
   }
 
   &__title {
@@ -83,5 +99,14 @@
     &_error {
       color: $error;
     }
+  }
+}
+
+@keyframes spin {
+  0% {
+	transform: rotate(0deg);
+  }
+  100% {
+	transform: rotate(360deg);
   }
 }

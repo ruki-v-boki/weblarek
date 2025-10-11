@@ -17,4 +17,8 @@
     @include mixins.button(white, $primaryLight, $primaryLight);
     border: $hoverBorder;
   }
+
+  &:disabled {
+    cursor: no-drop;
+  }
 }

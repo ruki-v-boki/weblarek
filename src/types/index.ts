@@ -58,16 +58,9 @@ export interface IFormErrorData {
 }
 
 export interface IBasketViewData {
+  basketList: HTMLUListElement
   totalPrice: number
-  purchases: IProduct[]
-  quantity: number
-  hasProducts: boolean
-}
-
-export interface IBasketViewPresenter {
-  getViewData(): IBasketViewData
-  renderCards(items: IProduct[]): HTMLElement[]
-  render(): HTMLElement
+  emptyMessage: HTMLElement
 }
 
 

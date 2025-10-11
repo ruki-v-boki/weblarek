@@ -6,10 +6,12 @@ import { IProduct } from "../../types";
 export class Products {
   private _allProducts: IProduct[]
   private _selectedProduct: IProduct | null
+  private _events: IEvents
 
-  constructor(private _events: IEvents){
+  constructor(events: IEvents){
     this._allProducts = []
     this._selectedProduct = null
+    this._events = events
   }
 
   // -----------------------------------

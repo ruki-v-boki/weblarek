@@ -8,11 +8,13 @@ import { IModalData } from "../../types";
 export class ModalView extends Component<IModalData> {
   private _closeButton: HTMLButtonElement
   private _content: HTMLElement
+  private _loader: HTMLElement
 
   constructor(container: HTMLElement, private _events: IEvents){
     super(container)
     this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container)
     this._content = ensureElement<HTMLElement>('.modal__content', container)
+    this._loader = ensureElement<HTMLElement>('.modal__content-loader', container)
 
     // ------------LISTENERS------------
     this._closeButton.addEventListener('click', () => {
@@ -43,7 +45,8 @@ export class ModalView extends Component<IModalData> {
     this.container.classList.remove('modal_active')
   }
 
-  isOpen(): boolean {
-    return this.container.classList.contains('modal_active')
+  showLoader(): void {
+    this._loader.classList.add('modal__content-loader_active')
+    this._content.replaceChildren(this._loader)
   }
 }

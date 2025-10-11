@@ -1,13 +1,14 @@
 import './scss/styles.scss';
 import { FormContactsView } from './components/Views/Forms/Child/FormContactsView';
 import { CardForPreview } from './components/Views/Card/Child/CardForPreview';
-import { BasketViewPresenter } from './components/Presenters/BasketPresenter';
 import { eventsMap, categoryMap, API_URL, CDN_URL } from './utils/constants';
-import { FormOrderView } from './components/Views/Forms/Child/FormOrdeViewr';
+import { FormOrderView } from './components/Views/Forms/Child/FormOrdeView'; 
 import { CardForCatalog } from './components/Views/Card/Child/CardForCtalog';
+import { CardForBasket } from './components/Views/Card/Child/CardForBasket';
 import { cloneTemplate, ensureElement, playSound } from './utils/utils';
 import { SuccessView } from './components/Views/SuccessView';
 import { GalleryView } from './components/Views/GalleryView';
+import { BasketView } from './components/Views/BasketView';
 import { HeaderView } from './components/Views/HeaderView';
 import { ModalView } from './components/Views/ModalView';
 import { EventEmitter } from './components/base/Events';
@@ -36,9 +37,9 @@ const soundSuccess = ensureElement<HTMLAudioElement>("#soundSuccess")
 // Cards
 const cardForCatalogTemplate = ensureElement<HTMLTemplateElement>("#card-catalog")
 const cardForPreviewTemplate = ensureElement<HTMLTemplateElement>("#card-preview")
-export const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket") // экспорт для презентера корзины
+const cardForBasketTemplate = ensureElement<HTMLTemplateElement>("#card-basket")
 // Basket
-export const basketTemplate = ensureElement<HTMLTemplateElement>("#basket") // экспорт для презентера корзины
+const basketTemplate = ensureElement<HTMLTemplateElement>("#basket")
 // Forms
 const formOrderTemplate = ensureElement<HTMLTemplateElement>("#order")
 const formContactsTemplate = ensureElement<HTMLTemplateElement>("#contacts")
@@ -64,13 +65,12 @@ const basketModel = new Basket(events)
 const buyerModel = new Buyer(events)
 // Views
 const headerView = new HeaderView(headerElement, events)
+const basketView = new BasketView(cloneTemplate(basketTemplate), events)
 const modalView = new ModalView(modalElement, events)
 const galleryView = new GalleryView(galleryElement)
 const formOrderView = new FormOrderView(cloneTemplate(formOrderTemplate), events)
 const formContactsView = new FormContactsView(cloneTemplate(formContactsTemplate), events)
 const successView = new SuccessView(cloneTemplate(successTemplate), events)
-// Presenter
-const basketViewPresenter = new BasketViewPresenter(basketModel, cardForBasketTemplate, events)
 
 
 // ------------ API ------------
@@ -84,9 +84,9 @@ apiClient.getAllProducts().then(data => {
 
 //-------------------------- CARDS ---------------------------------
 
-//СОБЫТИЕ 1) Рендерим каждую карточку товара в галерею
+//СОБЫТИЕ 1) Рисуем карточки, вставляем в галерею
 events.on(eventsMap.PRODUCTS_RECEIVED, (products: IProduct[]) => {
-  const productCards = products.map(product => {
+  const cards = products.map(product => {
     return new CardForCatalog(
       cloneTemplate(cardForCatalogTemplate),
       events,
@@ -95,7 +95,7 @@ events.on(eventsMap.PRODUCTS_RECEIVED, (products: IProduct[]) => {
     )
     .render(product)
   })
-  galleryView.galleryList = productCards
+  galleryView.galleryList = cards
 })
 
 
@@ -108,55 +108,76 @@ events.on(eventsMap.PRODUCT_SELECT, (data: { id: string }) => {
 
 //СОБЫТИЕ 3) Рисуем выбранную карточку и открываем модальное окно с превью
 events.on(eventsMap.SELECTED_PRODUCT_SET, (product: IProduct) => {
-  const cardForPreview = new CardForPreview(
+  const card = new CardForPreview(
     cloneTemplate(cardForPreviewTemplate),
     events,
     CDN_URL,
     categoryMap
   )
-  const renderedCard = cardForPreview.render(product)
 
   if (product.price === null) {
-      cardForPreview.toggleOrderButton(false)
-      cardForPreview.orderButtonText = 'Недоступно'
-  } else if (basketModel.isInBasket(product.id)) {
-      cardForPreview.orderButtonText = 'Удалить из корзины'
-  } else cardForPreview.orderButtonText = 'Купить'
+      card.toggleButtonState(false)
+      card.buttonText = 'Недоступно'
 
+  } else if (basketModel.isInBasket(product.id)) {
+      card.buttonText = 'Удалить из корзины'
+
+  } else card.buttonText = 'Купить'
+
+  const renderedCard = card.render(product)
   modalView.open(renderedCard)
   playSound(soundClick)
 })
 
 
-// СОБЫТИЕ 4) Добавляем/удаляем товар в корзину из карточки
+// СОБЫТИЕ 4) Добавляем/удаляем товар в корзину из превью карточки
 events.on(eventsMap.PRODUCT_SUBMIT, (data: { id: string }) => {
   const product = productsModel.getProductById(data.id)
   const productInBasket = basketModel.isInBasket(data.id)
 
   if (product && !productInBasket) {
       basketModel.addProduct(product)
-      playSound(soundBasketAdd)
       modalView.close()
+      playSound(soundBasketAdd)
+
   } else if (product && productInBasket) {
       basketModel.removeProduct(product)
-      playSound(soundBasketRemove)
       modalView.close()
+      playSound(soundBasketRemove)
   }
 })
 
 
 //-------------------------- BASKET ---------------------------------
 
-// СОБЫТИЕ 5) Меняем счетчик товаров корзины в хедере
-events.on(eventsMap.BASKET_COUNT_CHANGE, (data: { quantity: number }) => {
+// СОБЫТИЕ 5) Товары в корзине изменились
+events.on(eventsMap.BASKET_LIST_CHANGE, (data: {
+  purchases: IProduct[]
+  totalPrice: number
+  quantity: number
+}) => {
+  const renderedCards = data.purchases.map((product, index) => {
+    const card = new CardForBasket(cloneTemplate(cardForBasketTemplate), events)
+    card.index = index + 1
+    return card.render(product)
+  })
   headerView.counter = data.quantity
+  basketView.basketList = renderedCards
+  basketView.totalPrice = data.totalPrice
+  basketView.setEmptyMessage(data.quantity > 0)
+  basketView.toggleSubmitButton(data.quantity > 0)
 })
 
 
 // СОБЫТИЕ 6) Клик на кнопку корзины в хедере
 events.on(eventsMap.BASKET_OPEN, () => {
-  const basketView = basketViewPresenter.render()
-  modalView.open(basketView)
+  const hasProducts = basketModel.getQuantity() !== 0
+  const renderedBasket = basketView.render()
+
+  basketView.toggleSubmitButton(hasProducts)
+  basketView.setEmptyMessage(hasProducts)
+
+  modalView.open(renderedBasket)
   playSound(soundClick)
 })
 
@@ -164,12 +185,7 @@ events.on(eventsMap.BASKET_OPEN, () => {
 // СОБЫТИЕ 7) Удалить товар из открытой корзины
 events.on(eventsMap.PRODUCT_DELETE, (data: { id: string }) => {
   const product = productsModel.getProductById(data.id)
-  basketModel.removeProduct(product!)
-
-  if (modalView.isOpen()) {
-    const basketContent = basketViewPresenter.render()
-    modalView.content = basketContent
-  }
+  basketModel.removeProduct(product!) // и тут он точно ЕСТЬ
   playSound(soundBasketRemove)
 })
 
@@ -184,12 +200,13 @@ events.on(eventsMap.BASKET_PLACE_ORDER, () => {
 //-------------------------- FORMS ---------------------------------
 
 // СОБЫТИЕ 9) Клик по кнопкам выбора оплаты
-events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: { payment: TPayment, soundId: string }) => {
+events.on(eventsMap.FORM_PAYMENT_CHANGED, (data: { payment: TPayment }) => {
   buyerModel.payment = data.payment
 
-  if (data.soundId === 'paymentOnline') {
+  if (data.payment === 'online') {
     playSound(soundPaymentOnline)
-  } else if (data.soundId === 'paymentCash') {
+
+  } else if (data.payment === 'cash') {
     playSound(soundPaymentCash)
   }
 })
@@ -208,6 +225,7 @@ events.on(eventsMap.FORM_ORDER_SUBMIT, () => {
   playSound(soundFormSubmit)
 })
 
+// -----------------------------------------------------------------
 
 // СОБЫТИЕ 12) Ввод email в инпут
 events.on(eventsMap.FORM_EMAIL_CHANGED, (data: { email: string }) => {
@@ -226,12 +244,13 @@ events.on(eventsMap.FORM_PHONE_CHANGED, (data: { phone: string }) => {
 // Событие 14) Данные покупателя в модели изменились
 events.on(eventsMap.BUYER_CHANGE, (data: { field: string }) => {
   const errors = buyerModel.validate()
+  const selectedPayment = buyerModel.getAllBuyerData().payment
 
   if (data.field === 'payment' || data.field === 'address') {
     const isValid = formOrderView.checkIsFormValid(errors)
     formOrderView.toggleSubmitButton(isValid)
     formOrderView.toggleErrorClass(!isValid)
-    formOrderView.togglePaymentButtonStatus(buyerModel.getAllBuyerData().payment)
+    formOrderView.togglePaymentButtonStatus(selectedPayment)
 
   } else if (data.field === 'email' || data.field === 'phone') {
     const isValid = formContactsView.checkIsFormValid(errors)
@@ -255,6 +274,8 @@ events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
   const buyerData = buyerModel.getAllBuyerData()
   const purchases = basketModel.getPurchases()
 
+  modalView.showLoader()
+
   const orderData: TOrder = {
     payment: buyerData.payment,
     email: buyerData.email,
@@ -265,6 +286,7 @@ events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
   }
   playSound(soundFormSubmit)
 
+  const timeOut = 1000
   setTimeout(() => {
     apiClient.placeOrder(orderData).then(response => {
       if (response) {
@@ -279,7 +301,7 @@ events.on(eventsMap.FORM_CONTACTS_SUBMIT, () => {
       }
     })
       .catch(error => console.error('Не удалось разместить заказ: ', error))
-  }, 1000)
+  }, timeOut)
 })
 
 

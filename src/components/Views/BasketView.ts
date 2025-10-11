@@ -26,7 +26,7 @@ export class BasketView extends Component<IBasketViewData> {
 
   // -----------------------------------
 
-  set basketList(purchases: HTMLElement[]){
+  set basketList(purchases: HTMLElement[]){ //-----------------------
     this._basketList.replaceChildren(...purchases)
   }
 

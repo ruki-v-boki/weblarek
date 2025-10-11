@@ -31,14 +31,18 @@ export class Basket {
 
   addProduct(product: IProduct): void {
     this._purchases.add(product)
-    this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
+    this._events.emit(eventsMap.BASKET_LIST_CHANGE, {
+      purchases: this.getPurchases(),
+      totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity()
     })
   }
 
   removeProduct(product: IProduct): void {
     this._purchases.delete(product)
-    this._events.emit(eventsMap.BASKET_COUNT_CHANGE, {
+    this._events.emit(eventsMap.BASKET_LIST_CHANGE, {
+      purchases: this.getPurchases(),
+      totalPrice: this.getTotalPrice(),
       quantity: this.getQuantity()
     })
   }

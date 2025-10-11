@@ -18,17 +18,11 @@ export class FormOrderView extends FormView {
 
     // ------------ LISTENERS ------------
     this._onlinePayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, {
-        payment: 'online',
-        soundId: 'paymentOnline'
-      })
+      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, { payment: 'online' })
     })
 
     this._cashPayButton.addEventListener('click', () => {
-      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, {
-        payment: 'cash',
-        soundId: 'paymentCash'
-      })
+      this._events.emit(eventsMap.FORM_PAYMENT_CHANGED, { payment: 'cash' })
     })
 
     this._address.addEventListener('input', () => {
