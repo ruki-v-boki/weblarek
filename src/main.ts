@@ -1,10 +1,11 @@
 import './scss/styles.scss';
-import { FormContactsView } from './components/Views/Forms/FormContactsView';
 import { BasketViewPresenter } from './components/Presenters/BasketPresenter';
+import { eventsMap, categoryMap, API_URL, CDN_URL } from './utils/constants';
+import { FormContactsView } from './components/Views/Forms/FormContactsView';
+import { CardForPreview } from './components/Views/Card/CardForPreview';
 import { cloneTemplate, ensureElement, playSound } from './utils/utils';
 import { FormOrderView } from './components/Views/Forms/FormOrdeViewr';
 import { CardForCatalog } from './components/Views/Card/CardForCtalog';
-import { CardForPreview } from './components/Views/Card/CardPreview';
 import { SuccessView } from './components/Views/SuccessView';
 import { GalleryView } from './components/Views/GalleryView';
 import { HeaderView } from './components/Views/HeaderView';
@@ -12,7 +13,6 @@ import { ModalView } from './components/Views/ModalView';
 import { EventEmitter } from './components/base/Events';
 import { Products } from './components/Models/Products';
 import { Api, ApiClient } from './components/base/Api';
-import { eventsMap, API_URL } from './utils/constants';
 import { TPayment, IProduct, TOrder } from './types';
 import { Basket } from './components/Models/Basket';
 import { Buyer } from './components/Models/Buyer';
@@ -86,9 +86,15 @@ apiClient.getAllProducts().then(data => {
 
 //СОБЫТИЕ 1) Рендерим каждую карточку товара в галерею
 events.on(eventsMap.PRODUCTS_RECEIVED, (products: IProduct[]) => {
-  const productCards = products.map(product =>
-    new CardForCatalog(cloneTemplate(cardForCatalogTemplate), events)
-    .render(product))
+  const productCards = products.map(product => {
+    return new CardForCatalog(
+      cloneTemplate(cardForCatalogTemplate),
+      events,
+      CDN_URL,
+      categoryMap
+    )
+    .render(product)
+  })
   galleryView.galleryList = productCards
 })
 
@@ -102,7 +108,12 @@ events.on(eventsMap.PRODUCT_SELECT, (data: { id: string }) => {
 
 //СОБЫТИЕ 3) Рисуем выбранную карточку и открываем модальное окно с превью
 events.on(eventsMap.SELECTED_PRODUCT_SET, (product: IProduct) => {
-  const cardForPreview = new CardForPreview(cloneTemplate(cardForPreviewTemplate), events)
+  const cardForPreview = new CardForPreview(
+    cloneTemplate(cardForPreviewTemplate),
+    events,
+    CDN_URL,
+    categoryMap
+  )
   const renderedCard = cardForPreview.render(product)
 
   if (product.price === null) {

@@ -1,15 +1,20 @@
+import { CardImageCategory } from "./CardImageCategory";
 import { eventsMap } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
 import { IEvents } from "../../base/Events";
-import { CardView } from "./CardView";
 
 
-export class CardForPreview extends CardView {
+export class CardForPreview extends CardImageCategory {
   private _description: HTMLElement
   private _orderButton: HTMLButtonElement
 
-  constructor(container: HTMLElement, events: IEvents){
-    super(container, events)
+  constructor(
+    container: HTMLElement,
+    events: IEvents,
+    CDN_URL: string,
+    category: Record<string, string>
+  ){
+    super(container, events, CDN_URL, category)
     this._description = ensureElement<HTMLElement>('.card__text', container)
     this._orderButton = ensureElement<HTMLButtonElement>('.card__button', container)
 

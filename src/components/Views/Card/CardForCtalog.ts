@@ -1,11 +1,16 @@
+import { CardImageCategory } from "./CardImageCategory";
 import { eventsMap } from "../../../utils/constants";
 import { IEvents } from "../../base/Events";
-import { CardView } from "./CardView";
 
 
-export class CardForCatalog extends CardView {
-  constructor(container: HTMLElement, events: IEvents){
-    super(container, events)
+export class CardForCatalog extends CardImageCategory {
+  constructor(
+    container: HTMLElement,
+    events: IEvents,
+    CDN_URL: string,
+    category: Record<string, string>
+  ){
+    super(container, events, CDN_URL, category)
 
     // ------------LISTENERS------------
     this.container.addEventListener('click', () => {
