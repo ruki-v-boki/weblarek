@@ -52,7 +52,7 @@ export class Buyer {
   // -----------------------------------
 
   validate(): IValidationErrors {
-    let errors: IValidationErrors = {}
+    const errors: IValidationErrors = {}
 
     if (!this._payment) { errors.payment = 'Выберите способ оплаты' }
     if (!this._email) { errors.email = 'Необходимо указать email' }
