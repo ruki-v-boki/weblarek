@@ -44,6 +44,7 @@ const basketTemplate = ensureElement<HTMLTemplateElement>("#basket")
 
 
 // ------------ Elements ------------
+
 const galleryElement = ensureElement<HTMLElement>(".gallery")
 const headerElement = ensureElement<HTMLElement>(".header")
 const modalElement = ensureElement<HTMLElement>(".modal")
@@ -147,7 +148,7 @@ events.on(AppEvents.PRODUCT_SUBMIT, (data: { id: string }) => {
 })
 
 
-//-------------------------- BASKET ---------------------------------
+//-------------------------- BASKET --------------------------------
 
 // СОБЫТИЕ 5) Товары в корзине изменились
 events.on(AppEvents.BASKET_LIST_CHANGE, (data: {
@@ -265,8 +266,7 @@ events.on(AppEvents.FORM_INPUT_FOCUS, () => {
 })
 
 
-//-------------------------- PLACING ORDER ---------------------------------
-
+//-------------------------- PLACING ORDER -------------------------
 
 // СОБЫТИЕ 16) Клик по кнопке сабмита формы контактов
 events.on(AppEvents.FORM_CONTACTS_SUBMIT, () => {
@@ -304,7 +304,7 @@ events.on(AppEvents.FORM_CONTACTS_SUBMIT, () => {
 })
 
 
-//-------------------------- SUCCESS ---------------------------------
+//-------------------------- SUCCESS -------------------------------
 
 // СОБЫТИЕ 17) Клик по кнопке "За новыми покупками"
 events.on(AppEvents.SUCCESS_CONFIRM, () => {
