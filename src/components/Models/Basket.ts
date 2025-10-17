@@ -56,5 +56,10 @@ export class Basket {
 
   clear(): void {
     this._purchases.clear()
+    this._events.emit(AppEvents.BASKET_LIST_CHANGE, {
+      purchases: this.getPurchases(),
+      totalPrice: this.getTotalPrice(),
+      quantity: this.getQuantity()
+    })
   }
 }
